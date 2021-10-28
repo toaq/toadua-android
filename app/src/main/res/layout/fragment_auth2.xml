@@ -8,6 +8,18 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <ImageView
+        android:id="@+id/simpleImageView"
+        android:layout_width="517dp"
+        android:layout_height="453dp"
+        android:layout_marginTop="328dp"
+        android:alpha=".25"
+        android:src="@drawable/jemu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.604"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -64,8 +76,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
         android:backgroundTint="#fc6c85"
-        android:text="Continue"
         android:gravity="center_vertical|right"
+        android:text="Continue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.813"
         app:layout_constraintStart_toStartOf="parent"

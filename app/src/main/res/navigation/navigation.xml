@@ -9,6 +9,15 @@
         android:id="@+id/authFragment"
         android:name="town.robin.toadua.AuthFragment"
         android:label="fragment_auth2"
-        tools:layout="@layout/fragment_auth2" />
+        tools:layout="@layout/fragment_auth2" >
+        <action
+            android:id="@+id/action_authFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="town.robin.toadua.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
 
 </navigation>

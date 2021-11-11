@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.Navigation
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,6 +39,16 @@ class AuthFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         myinflate = inflater.inflate(R.layout.fragment_auth2, container, false)
+
+        var skipbutton = myinflate.findViewById<Button>(R.id.skip_button)
+        skipbutton.setOnClickListener{
+            Navigation.findNavController(myinflate).navigate(R.id.action_authFragment_to_searchFragment)
+        }
+        /*
+        gotoFragment2 = view.findViewById(R.id.fragment_fragment1_gotofragment2);
+        gotoFragment2.setOnClickListener(this);
+         */
+
         var createaccountbutton = myinflate.findViewById<Button>(R.id.create_account_button)
         var signincreateaccount = myinflate.findViewById<TextView>(R.id.textView2)
 

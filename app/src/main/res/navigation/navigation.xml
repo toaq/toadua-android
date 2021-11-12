@@ -9,7 +9,7 @@
         android:id="@+id/authFragment"
         android:name="town.robin.toadua.AuthFragment"
         android:label="fragment_auth2"
-        tools:layout="@layout/fragment_auth2" >
+        tools:layout="@layout/fragment_auth" >
         <action
             android:id="@+id/action_authFragment_to_searchFragment"
             app:destination="@id/searchFragment" />

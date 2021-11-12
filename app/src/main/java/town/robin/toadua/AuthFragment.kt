@@ -38,7 +38,7 @@ class AuthFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        myinflate = inflater.inflate(R.layout.fragment_auth2, container, false)
+        myinflate = inflater.inflate(R.layout.fragment_auth, container, false)
 
         var skipbutton = myinflate.findViewById<Button>(R.id.skip_button)
         skipbutton.setOnClickListener{

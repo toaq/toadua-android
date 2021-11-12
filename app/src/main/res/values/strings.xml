@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Toadua</string>
-    <string name="sign_in">Sign In</string>
+    <string name="sign_in">Sign in</string>
+    <string name="cont">Continue</string>
+    <string name="create_account">Create account</string>
+    <string name="use_existing_account">Use existing account</string>
+    <string name="skip">Skip</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="search">Search…</string>

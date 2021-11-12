@@ -9,4 +9,5 @@
     <color name="gray">#999999</color>
     <color name="dark_gray">#4c4c4c</color>
     <color name="white_overlay">#44ffffff</color>
+    <color name="pink_overlay">#22ff5e77</color>
 </resources>

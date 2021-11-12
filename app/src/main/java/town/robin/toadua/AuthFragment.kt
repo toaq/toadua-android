@@ -57,13 +57,13 @@ class AuthFragment : Fragment() {
                 // do something
                 if(flagCreateAccount == false) {
                     flagCreateAccount = true
-                    signincreateaccount.setText("Create Account")
-                    createaccountbutton.setText("Use an existing account")
+                    signincreateaccount.text = getString(R.string.create_account)
+                    createaccountbutton.text = getString(R.string.use_existing_account)
                 }
                 else if(flagCreateAccount == true) {
                     flagCreateAccount = false
-                    signincreateaccount.setText("Sign in")
-                    createaccountbutton.setText("Create Account")
+                    signincreateaccount.text = getString(R.string.sign_in)
+                    createaccountbutton.text = getString(R.string.create_account)
                 }
             }
         })

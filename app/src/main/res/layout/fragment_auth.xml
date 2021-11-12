@@ -51,7 +51,6 @@
         android:layout_marginEnd="72dp"
         android:hint="@string/username"
         android:inputType="text"
-        android:textColor="#808080"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -62,8 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="@string/password"
-        android:inputType="text"
-        android:textColor="#808080"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/username_input"
         app:layout_constraintHorizontal_bias="0.355"
         app:layout_constraintStart_toStartOf="@+id/username_input"

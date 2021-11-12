@@ -9,10 +9,10 @@
     <!-- TODO: Update blank fragment layout -->
 
     <ImageView
-        android:id="@+id/simpleImageView"
         android:layout_width="0dp"
         android:layout_height="400dp"
         android:alpha="0.15"
+        android:contentDescription="@string/jemu"
         android:scaleX="1.5"
         android:scaleY="1.5"
         android:src="@drawable/jemu"

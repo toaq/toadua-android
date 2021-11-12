@@ -5,11 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.navigation.Navigation
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private var flagCreateAccount:Boolean = false
 
 /**
  * A simple [Fragment] subclass.
@@ -20,7 +24,7 @@ class AuthFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var myinflate: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,7 +38,39 @@ class AuthFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_auth2, container, false)
+        myinflate = inflater.inflate(R.layout.fragment_auth2, container, false)
+
+        var skipbutton = myinflate.findViewById<Button>(R.id.skip_button)
+        skipbutton.setOnClickListener{
+            Navigation.findNavController(myinflate).navigate(R.id.action_authFragment_to_searchFragment)
+        }
+        /*
+        gotoFragment2 = view.findViewById(R.id.fragment_fragment1_gotofragment2);
+        gotoFragment2.setOnClickListener(this);
+         */
+
+        var createaccountbutton = myinflate.findViewById<Button>(R.id.create_account_button)
+        var signincreateaccount = myinflate.findViewById<TextView>(R.id.textView2)
+
+        createaccountbutton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                // do something
+                if(flagCreateAccount == false) {
+                    flagCreateAccount = true
+                    signincreateaccount.setText("Create Account")
+                    createaccountbutton.setText("Use an existing account")
+                }
+                else if(flagCreateAccount == true) {
+                    flagCreateAccount = false
+                    signincreateaccount.setText("Sign in")
+                    createaccountbutton.setText("Create Account")
+                }
+            }
+        })
+
+
+        return myinflate
+
     }
 
     companion object {

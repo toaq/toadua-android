@@ -17,7 +17,7 @@ class AuthFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentAuthBinding.inflate(inflater, container, false)
 
         binding.continueButton.setOnClickListener {

@@ -13,7 +13,9 @@
             android:id="@+id/auth_to_search"
             app:destination="@id/search_fragment"
             app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+            app:exitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/auth_fragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/search_fragment"

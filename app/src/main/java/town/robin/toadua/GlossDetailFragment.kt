@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,41 +12,25 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import town.robin.toadua.databinding.CommentBinding
-import town.robin.toadua.databinding.FragmentSearchBinding
 import town.robin.toadua.databinding.EntryCardBinding
+import town.robin.toadua.databinding.FragmentGlossDetailBinding
 
-class SearchFragment : Fragment() {
-    private lateinit var binding: FragmentSearchBinding
+class GlossDetailFragment : Fragment() {
+    private lateinit var binding: FragmentGlossDetailBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+    ): View {
+        binding = FragmentGlossDetailBinding.inflate(inflater, container, false)
 
         binding.results.apply {
             adapter = ResultsAdapter()
             layoutManager = LinearLayoutManager(context)
         }
 
-        binding.sortSpinner.adapter = ArrayAdapter.createFromResource(
-            requireContext(), R.array.sort_options, R.layout.spinner_item,
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-
-        binding.menuButton.setOnClickListener {
-            findNavController().apply {
-                popBackStack()
-                navigate(R.id.gloss_fragment)
-            }
-        }
-        binding.filterButton.setOnClickListener {
-            TransitionManager.beginDelayedTransition(binding.navBar, ChangeBounds().apply { duration = 150 })
-            binding.filters.visibility = when (binding.filters.visibility) {
-                View.VISIBLE -> View.GONE
-                else -> View.VISIBLE
-            }
+        binding.backButton.setOnClickListener {
+            findNavController().navigateUp()
         }
 
         return binding.root

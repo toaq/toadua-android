@@ -42,7 +42,7 @@ class AuthFragment : Fragment() {
 
         var skipbutton = myinflate.findViewById<Button>(R.id.skip_button)
         skipbutton.setOnClickListener{
-            Navigation.findNavController(myinflate).navigate(R.id.action_authFragment_to_searchFragment)
+            Navigation.findNavController(myinflate).navigate(R.id.auth_to_search)
         }
         /*
         gotoFragment2 = view.findViewById(R.id.fragment_fragment1_gotofragment2);
@@ -50,7 +50,7 @@ class AuthFragment : Fragment() {
          */
 
         var createaccountbutton = myinflate.findViewById<Button>(R.id.create_account_button)
-        var signincreateaccount = myinflate.findViewById<TextView>(R.id.textView2)
+        var signincreateaccount = myinflate.findViewById<TextView>(R.id.auth_title)
 
         createaccountbutton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {

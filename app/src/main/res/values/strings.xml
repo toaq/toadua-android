@@ -22,4 +22,6 @@
     <string name="comment">Comment</string>
     <string name="copy">Copy</string>
     <string name="delete">Delete</string>
+    <string name="back">Back</string>
+    <string name="gloss">Gloss…</string>
 </resources>

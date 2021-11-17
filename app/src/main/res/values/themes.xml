@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Toadua" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.Toadua" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryVariant">@color/blue</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -9,7 +9,17 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
     </style>
+
     <style name="white_ripple">
         <item name="colorControlHighlight">@color/white_overlay</item>
     </style>
+
+    <style name="Theme.Toadua.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Toadua.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Toadua.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -48,11 +48,12 @@ class AuthFragment : Fragment() {
 
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setHasOptionsMenu(true)
-        var drawerLayout = binding.myDrawerLayout
+        val drawerLayout = binding.myDrawerLayout
         actionBarDrawerToggle =
             ActionBarDrawerToggle(activity, drawerLayout, R.string.nav_open , R.string.nav_close)
 
@@ -62,11 +63,6 @@ class AuthFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-       if (actionBarDrawerToggle?.onOptionsItemSelected(item)) {
-           return true
-        } else {
-           return super.onOptionsItemSelected(item)
-       }
-    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        actionBarDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
 }

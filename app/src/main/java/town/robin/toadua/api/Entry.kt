@@ -1,6 +1,4 @@
-package town.robin.toadua
-
-import java.time.Instant
+package town.robin.toadua.api
 
 data class Entry(
     val id: String,

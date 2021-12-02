@@ -20,6 +20,9 @@ import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import town.robin.toadua.api.Entry
+import town.robin.toadua.api.Note
+import town.robin.toadua.api.ToaduaService
 import town.robin.toadua.databinding.CommentBinding
 import town.robin.toadua.databinding.FragmentSearchBinding
 import town.robin.toadua.databinding.EntryCardBinding

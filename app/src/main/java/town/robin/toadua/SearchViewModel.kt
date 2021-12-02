@@ -6,6 +6,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import town.robin.toadua.api.Entry
+import town.robin.toadua.api.SearchRequest
+import town.robin.toadua.api.ToaduaService
 
 class SearchViewModelFactory(private val api: ToaduaService) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T = SearchViewModel(api) as T

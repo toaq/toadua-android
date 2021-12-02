@@ -1,4 +1,4 @@
-package town.robin.toadua
+package town.robin.toadua.api
 
 interface ToaduaResponse {
     val version: String

@@ -11,9 +11,6 @@ import androidx.navigation.fragment.findNavController
 import town.robin.toadua.databinding.FragmentAuthBinding
 import android.view.MenuItem
 
-
-
-
 class AuthFragment : Fragment() {
     private lateinit var binding: FragmentAuthBinding
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -49,11 +46,6 @@ class AuthFragment : Fragment() {
             }
         }
 
-
-        //new
-        //setHasOptionsMenu(true)
-       //here
-
         return binding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,7 +60,6 @@ class AuthFragment : Fragment() {
         actionBarDrawerToggle.syncState()
 
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,4 +1,4 @@
-package town.robin.toadua
+package town.robin.toadua.api
 
 import java.time.Instant
 

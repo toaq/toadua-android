@@ -1,4 +1,4 @@
-package town.robin.toadua
+package town.robin.toadua.api
 
 data class SearchResponse(
     override val version: String,

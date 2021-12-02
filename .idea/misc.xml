@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable/nav_button_ripple.xml" value="0.3734375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/comment.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/entry_card.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_auth.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_auth2.xml" value="0.39114583333333336" />
         <entry key="app/src/main/res/layout/fragment_gloss.xml" value="0.3572916666666667" />

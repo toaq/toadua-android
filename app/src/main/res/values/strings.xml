@@ -17,6 +17,9 @@
         <item>Oldest</item>
         <item>Newest</item>
     </string-array>
+    <string name="welcome_title">Welcome to Toadua</string>
+    <string name="welcome_subtitle">The collaborative Toaq dictionary</string>
+    <string name="no_results">No results</string>
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
     <string name="comment">Comment</string>

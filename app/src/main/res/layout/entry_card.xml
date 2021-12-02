@@ -30,10 +30,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
                 android:text="cıepoq"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/score"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
@@ -48,6 +50,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/author"
+                app:layout_constraintStart_toEndOf="@+id/head"
                 app:layout_constraintTop_toTopOf="@+id/author" />
 
             <TextView
@@ -61,12 +64,13 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/score"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
                 android:id="@+id/body"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="12dp"
@@ -74,6 +78,7 @@
                 android:textColor="@color/dark_gray"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/author"
                 app:layout_constraintStart_toStartOf="@+id/head"
                 app:layout_constraintTop_toBottomOf="@+id/head" />
         </androidx.constraintlayout.widget.ConstraintLayout>

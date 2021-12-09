@@ -1,5 +1,6 @@
 package town.robin.toadua
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.navigation.fragment.findNavController
 import town.robin.toadua.databinding.FragmentAuthBinding
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.FrameLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import town.robin.toadua.api.ToaduaService
 import java.net.URI
 
 class AuthFragment : Fragment() {
@@ -42,7 +48,7 @@ class AuthFragment : Fragment() {
 
         binding.continueButton.setOnClickListener {
             when (authType) {
-                AuthType.SIGN_IN -> model::login
+                AuthType.SIGN_IN -> model::signIn
                 AuthType.CREATE_ACCOUNT -> model::createAccount
             }.let { it(binding.usernameInput.text.toString(), binding.passwordInput.text.toString()) }
         }
@@ -59,6 +65,33 @@ class AuthFragment : Fragment() {
                     binding.createAccountButton.text = getString(R.string.create_account)
                 }
             }
+        }
+        binding.changeServerButton.setOnClickListener {
+            val input = EditText(requireContext()).apply {
+                setText(activityModel.prefs.server)
+                layoutParams = FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                ).apply {
+                    val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+                    marginStart = margin
+                    marginEnd = margin
+                }
+            }
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.server_address)
+                .setView(FrameLayout(requireContext()).apply { addView(input) })
+                .setPositiveButton(R.string.confirm) { _, _ ->
+                    val server = input.text.toString()
+                    activityModel.prefs.server = server
+                    binding.authServer.text = URI(server).host
+                    activityModel.api = ToaduaService.create(server)
+                    model.api = activityModel.api
+                }
+                .setNegativeButton(R.string.cancel) { _, _ -> }
+                .show()
+
+            input.postDelayed({ focusInput(input) },200)
         }
         binding.skipButton.setOnClickListener {
             findNavController().navigate(R.id.auth_to_search)
@@ -103,4 +136,10 @@ class AuthFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         actionBarDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
+
+    private fun focusInput(view: View) {
+        view.requestFocus()
+        (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
 }

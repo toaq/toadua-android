@@ -4,9 +4,12 @@
     <string name="cont">Continue</string>
     <string name="create_account">Create account</string>
     <string name="use_existing_account">Use existing account</string>
+    <string name="change_server">Change server</string>
     <string name="skip">Skip for now</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="server_address">Server address</string>
+    <string name="confirm">Confirm</string>
     <string name="jemu">Jemu</string>
     <string name="cant_connect">Can\'t connect to the server</string>
     <string name="log_out">Log out</string>

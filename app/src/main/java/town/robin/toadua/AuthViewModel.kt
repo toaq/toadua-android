@@ -1,5 +1,6 @@
 package town.robin.toadua
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -9,7 +10,7 @@ import town.robin.toadua.api.LoginRequest
 import town.robin.toadua.api.RegisterRequest
 import town.robin.toadua.api.ToaduaService
 
-class AuthViewModel(private val api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModel() {
+class AuthViewModel(var api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModel() {
     class Factory(private val api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T = AuthViewModel(api, prefs) as T
     }
@@ -17,7 +18,7 @@ class AuthViewModel(private val api: ToaduaService, private val prefs: ToaduaPre
     val loading = MutableStateFlow(false)
     val loggedIn = MutableStateFlow(false)
 
-    fun login(username: String, password: String) {
+    fun signIn(username: String, password: String) {
         loading.value = true
         viewModelScope.launch {
             try {
@@ -28,9 +29,11 @@ class AuthViewModel(private val api: ToaduaService, private val prefs: ToaduaPre
                     loggedIn.value = true
                 } else {
                     loading.value = false
+                    Log.w("signIn", "Failed to sign in: ${login.error}")
                 }
             } catch (t: Throwable) {
                 loading.value = false
+                Log.w("signIn", "Failed to sign in", t)
             }
         }
     }
@@ -46,9 +49,11 @@ class AuthViewModel(private val api: ToaduaService, private val prefs: ToaduaPre
                     loggedIn.value = true
                 } else {
                     loading.value = false
+                    Log.w("createAccount", "Failed to create account: ${register.error}")
                 }
             } catch (t: Throwable) {
                 loading.value = false
+                Log.w("createAccount", "Failed to create account", t)
             }
         }
     }

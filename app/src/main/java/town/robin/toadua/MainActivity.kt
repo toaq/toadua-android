@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             // Verify that the user's token is still valid
             lifecycleScope.launch(Dispatchers.IO) {
                 val welcome = model.api.welcome(WelcomeRequest(model.prefs.authToken!!))
-                if (!(welcome.success && welcome.name != null)) {
+                if (!(welcome.success && welcome.name == model.prefs.username)) {
                     model.prefs.apply {
                         authToken = null
                         username = null

@@ -8,6 +8,9 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="jemu">Jemu</string>
+    <string name="cant_connect">Can\'t connect to the server</string>
+    <string name="log_out">Log out</string>
+    <string name="try_again">Try again</string>
     <string name="search">Search…</string>
     <string name="menu">Menu</string>
     <string name="clear">Clear</string>

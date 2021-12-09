@@ -13,4 +13,9 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     val prefs = ToaduaPrefs(context.getSharedPreferences("prefs", Context.MODE_PRIVATE))
     val api = ToaduaService.create(prefs.server)
     val loggedIn get() = prefs.authToken != null
+
+    fun invalidateSession() {
+        prefs.authToken = null
+        prefs.username = null
+    }
 }

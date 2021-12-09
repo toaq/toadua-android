@@ -3,7 +3,9 @@ package town.robin.toadua
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,6 +15,7 @@ import town.robin.toadua.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
     private val model: ToaduaViewModel by viewModels {
         ToaduaViewModel.Factory(this)
     }
@@ -25,21 +28,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        navController = findNavController(R.id.nav_host)
 
         if (model.loggedIn) {
-            val navController = findNavController(R.id.nav_host)
             navController.navigate(R.id.search_fragment)
+            lifecycleScope.launch(Dispatchers.IO) { verifyAuth() }
+        }
+    }
 
-            // Verify that the user's token is still valid
-            lifecycleScope.launch(Dispatchers.IO) {
-                val welcome = model.api.welcome(WelcomeRequest(model.prefs.authToken!!))
-                if (!(welcome.success && welcome.name == model.prefs.username)) {
-                    model.prefs.apply {
-                        authToken = null
-                        username = null
+    // Verify the access token is still valid
+    private suspend fun verifyAuth() {
+        try {
+            val welcome = model.api.welcome(WelcomeRequest(model.prefs.authToken!!))
+            if (!(welcome.success && welcome.name == model.prefs.username)) {
+                model.invalidateSession()
+                withContext(Dispatchers.Main) { navController.navigate(R.id.auth_fragment) }
+            }
+        } catch (t: Throwable) {
+            withContext(Dispatchers.Main) {
+                AlertDialog.Builder(this@MainActivity)
+                    .setMessage(R.string.cant_connect)
+                    .setPositiveButton(R.string.try_again) { _, _ ->
+                        lifecycleScope.launch(Dispatchers.IO) { verifyAuth() }
                     }
-                    withContext(Dispatchers.Main) { navController.navigate(R.id.auth_fragment) }
-                }
+                    .setNegativeButton(R.string.log_out) { _, _ ->
+                        model.invalidateSession()
+                        navController.navigate(R.id.auth_fragment)
+                    }
+                    .show()
             }
         }
     }

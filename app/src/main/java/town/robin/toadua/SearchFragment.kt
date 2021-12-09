@@ -62,10 +62,14 @@ class SearchFragment : Fragment() {
         binding.createButton.visibility = if (activityModel.loggedIn) View.VISIBLE else View.INVISIBLE
 
         binding.menuButton.setOnClickListener {
+            // TODO: open the side drawer instead
             findNavController().apply {
                 popBackStack()
                 navigate(R.id.gloss_fragment)
             }
+        }
+        binding.clearButton.setOnClickListener {
+            binding.searchInput.text.clear()
         }
         binding.filterButton.setOnClickListener {
             TransitionManager.beginDelayedTransition(binding.navBar, ChangeBounds().apply { duration = 150 })
@@ -76,6 +80,7 @@ class SearchFragment : Fragment() {
         }
         binding.searchInput.doOnTextChanged { text, _, _, _ ->
             model.query.value = text?.toString() ?: ""
+            binding.clearButton.visibility = if (text?.isEmpty() != false) View.GONE else View.VISIBLE
         }
         binding.createButton.setOnClickListener {
             binding.createTermInput.text.clear()

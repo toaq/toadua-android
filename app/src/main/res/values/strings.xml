@@ -10,6 +10,7 @@
     <string name="jemu">Jemu</string>
     <string name="search">Search…</string>
     <string name="menu">Menu</string>
+    <string name="clear">Clear</string>
     <string name="filter">Filter</string>
     <string name="user">User</string>
     <string-array name="sort_options">

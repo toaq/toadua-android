@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/gloss_fragment"
         android:name="town.robin.toadua.GlossFragment"
-        tools:layout="@layout/fragment_gloss" >
+        tools:layout="@layout/fragment_gloss">
         <action
             android:id="@+id/gloss_to_gloss_detail"
             app:destination="@id/gloss_detail_fragment" />

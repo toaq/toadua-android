@@ -55,7 +55,7 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
             loading.value = true
             api.note(NoteRequest(prefs.authToken!!, entry.id, comment))
             loading.value = false
-            entry.notes.add(Note("", prefs.username, comment))
+            entry.notes.add(Note("", prefs.username!!, comment))
             uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
         }
     }

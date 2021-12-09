@@ -22,9 +22,7 @@
         app:headerLayout="@layout/nav_header_test_nav"
         app:menu="@menu/navigation_menu" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".AuthFragment">
@@ -65,18 +63,18 @@
         app:layout_constraintStart_toStartOf="@+id/auth_title"
         app:layout_constraintTop_toBottomOf="@+id/auth_title" />
 
-    <EditText
-        android:id="@+id/username_input"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="64dp"
-        android:autofillHints="username"
-        android:hint="@string/username"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/auth_server"
-        app:layout_constraintTop_toBottomOf="@+id/auth_server" />
+        <EditText
+            android:id="@+id/username_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="64dp"
+            android:autofillHints="username"
+            android:hint="@string/username"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/auth_server"
+            app:layout_constraintTop_toBottomOf="@+id/auth_server" />
 
     <EditText
         android:id="@+id/password_input"
@@ -91,7 +89,19 @@
         app:layout_constraintStart_toStartOf="@+id/username_input"
         app:layout_constraintTop_toBottomOf="@+id/username_input" />
 
-    <Button
+        <ProgressBar
+            android:id="@+id/auth_loading_indicator"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/continue_button"
+            app:layout_constraintEnd_toStartOf="@+id/continue_button"
+            app:layout_constraintTop_toTopOf="@+id/continue_button" />
+
+        <Button
         android:id="@+id/continue_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -38,14 +38,17 @@ class AuthFragment : Fragment() {
         binding = FragmentAuthBinding.inflate(inflater, container, false)
 
         binding.continueButton.setOnClickListener {
-            model.login(binding.usernameInput.text.toString(), binding.passwordInput.text.toString())
+            when (authType) {
+                AuthType.SIGN_IN -> model::login
+                AuthType.CREATE_ACCOUNT -> model::createAccount
+            }.let { it(binding.usernameInput.text.toString(), binding.passwordInput.text.toString()) }
         }
         binding.skipButton.setOnClickListener {
             findNavController().navigate(R.id.auth_to_search)
         }
 
         binding.createAccountButton.setOnClickListener {
-            when(authType) {
+            when (authType) {
                 AuthType.SIGN_IN -> {
                     authType = AuthType.CREATE_ACCOUNT
                     binding.authTitle.text = getString(R.string.create_account)
@@ -59,6 +62,18 @@ class AuthFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.loading.collect {
+                    binding.usernameInput.isEnabled = !it
+                    binding.passwordInput.isEnabled = !it
+                    binding.authLoadingIndicator.visibility = if (it) View.VISIBLE else View.GONE
+                    binding.continueButton.isEnabled = !it
+                    binding.createAccountButton.isEnabled = !it
+                    binding.skipButton.isEnabled = !it
+                }
+            }
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.loggedIn.collect {

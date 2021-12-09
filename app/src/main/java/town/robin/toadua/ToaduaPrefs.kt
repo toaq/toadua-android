@@ -20,5 +20,5 @@ class ToaduaPrefs(prefs: SharedPreferences) {
     var server: String by prefs.string("server", "http://[::1]:29138/")
     var authToken: String? by prefs.nullableString("auth_token")
     var language: String by prefs.string("language", "en")
-    var username: String by prefs.string("username", "robintown") // TODO: un-hardcode
+    var username: String? by prefs.nullableString("username")
 }

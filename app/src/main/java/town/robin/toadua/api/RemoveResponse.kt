@@ -1,8 +1,7 @@
 package town.robin.toadua.api
 
-data class SearchResponse(
+data class RemoveResponse(
     override val version: String,
     override val success: Boolean,
     override val error: String?,
-    val results: MutableList<Entry>?,
 ) : ToaduaResponse

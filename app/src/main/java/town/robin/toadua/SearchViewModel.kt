@@ -4,33 +4,69 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
-import town.robin.toadua.api.Entry
-import town.robin.toadua.api.SearchRequest
-import town.robin.toadua.api.ToaduaService
+import kotlinx.coroutines.launch
+import town.robin.toadua.api.*
 
-class SearchViewModelFactory(private val api: ToaduaService) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = SearchViewModel(api) as T
-}
+class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModel() {
+    class Factory(private val api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = SearchViewModel(api, prefs) as T
+    }
 
-class SearchViewModel(private val api: ToaduaService) : ViewModel() {
     val query = MutableStateFlow("")
     val loading = MutableStateFlow(false)
 
-    val results: StateFlow<Array<Entry>> = query.debounce(250).mapLatest {
-        val terms = it.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
+    @ExperimentalCoroutinesApi @FlowPreview
+    val results: StateFlow<MutableList<Entry>> = query.debounce(250).mapLatest { query ->
+        val terms = query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
         if (terms.isEmpty()) {
-            arrayOf()
+            mutableListOf()
         } else {
             loading.value = true
-            val response = api.search(SearchRequest(null, terms))
+            val response = api.search(SearchRequest(prefs.authToken, terms))
             loading.value = false
-            response.results ?: arrayOf()
+            response.results ?: mutableListOf()
         }
     }.flowOn(Dispatchers.IO).stateIn(
         scope = viewModelScope,
         started = WhileSubscribed(5000),
-        initialValue = arrayOf()
+        initialValue = mutableListOf()
     )
+    val uiResults = MutableStateFlow(LiveList<Entry>(mutableListOf(), null, UpdateAction.ADD))
+
+    fun voteOnEntry(index: Int, vote: Int) {
+        viewModelScope.launch {
+            val list = uiResults.value.list
+            val entry = list[index]
+            entry.score += vote - entry.vote!!
+            entry.vote = vote
+            uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
+            api.vote(VoteRequest(prefs.authToken!!, entry.id, vote))
+        }
+    }
+
+    fun commentOnEntry(index: Int, comment: String) {
+        viewModelScope.launch {
+            val list = uiResults.value.list
+            val entry = list[index]
+            loading.value = true
+            api.note(NoteRequest(prefs.authToken!!, entry.id, comment))
+            loading.value = false
+            entry.notes.add(Note("", prefs.username, comment))
+            uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
+        }
+    }
+
+    fun deleteEntry(index: Int) {
+        viewModelScope.launch {
+            val list = uiResults.value.list
+            loading.value = true
+            api.remove(RemoveRequest(prefs.authToken!!, list[index].id))
+            loading.value = false
+            uiResults.value = LiveList(list.apply { removeAt(index) }, index, UpdateAction.REMOVE)
+        }
+    }
 }

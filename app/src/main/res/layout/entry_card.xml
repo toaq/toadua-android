@@ -83,6 +83,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/head" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/comments"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/light_gray"
+            android:padding="12dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/entry"
+            tools:visibility="visible" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/entry_controls"
             android:layout_width="0dp"
@@ -91,18 +103,8 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/entry"
+            app:layout_constraintTop_toBottomOf="@+id/comments"
             tools:visibility="visible">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/comments"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/light_gray"
-                android:padding="12dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/like"
@@ -114,7 +116,7 @@
                 android:theme="@style/white_ripple"
                 app:layout_constraintEnd_toStartOf="@+id/dislike"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/comments"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_like_inactive"
                 app:tint="@color/white" />
 
@@ -128,7 +130,7 @@
                 android:theme="@style/white_ripple"
                 app:layout_constraintEnd_toStartOf="@+id/comment"
                 app:layout_constraintStart_toEndOf="@+id/like"
-                app:layout_constraintTop_toBottomOf="@+id/comments"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_dislike_inactive"
                 app:tint="@color/white" />
 
@@ -142,7 +144,7 @@
                 android:theme="@style/white_ripple"
                 app:layout_constraintEnd_toStartOf="@+id/copy"
                 app:layout_constraintStart_toEndOf="@+id/dislike"
-                app:layout_constraintTop_toBottomOf="@+id/comments"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_comment"
                 app:tint="@color/white" />
 
@@ -156,7 +158,7 @@
                 android:theme="@style/white_ripple"
                 app:layout_constraintEnd_toStartOf="@+id/delete"
                 app:layout_constraintStart_toEndOf="@+id/comment"
-                app:layout_constraintTop_toBottomOf="@+id/comments"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_copy"
                 app:tint="@color/white" />
 
@@ -170,7 +172,7 @@
                 android:theme="@style/white_ripple"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/copy"
-                app:layout_constraintTop_toBottomOf="@+id/comments"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_delete"
                 app:tint="@color/white" />
         </androidx.constraintlayout.widget.ConstraintLayout>

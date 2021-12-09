@@ -10,10 +10,23 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.navigation.fragment.findNavController
 import town.robin.toadua.databinding.FragmentAuthBinding
 import android.view.MenuItem
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class AuthFragment : Fragment() {
     private lateinit var binding: FragmentAuthBinding
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private val activityModel: ToaduaViewModel by activityViewModels {
+        ToaduaViewModel.Factory(requireContext())
+    }
+    private val model: AuthViewModel by viewModels {
+        AuthViewModel.Factory(activityModel.api, activityModel.prefs)
+    }
 
     private enum class AuthType { SIGN_IN, CREATE_ACCOUNT }
     private var authType = AuthType.SIGN_IN
@@ -25,7 +38,7 @@ class AuthFragment : Fragment() {
         binding = FragmentAuthBinding.inflate(inflater, container, false)
 
         binding.continueButton.setOnClickListener {
-            findNavController().navigate(R.id.auth_to_search)
+            model.login(binding.usernameInput.text.toString(), binding.passwordInput.text.toString())
         }
         binding.skipButton.setOnClickListener {
             findNavController().navigate(R.id.auth_to_search)
@@ -42,6 +55,14 @@ class AuthFragment : Fragment() {
                     authType = AuthType.SIGN_IN
                     binding.authTitle.text = getString(R.string.sign_in)
                     binding.createAccountButton.text = getString(R.string.create_account)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.loggedIn.collect {
+                    if (it) findNavController().navigate(R.id.auth_to_search)
                 }
             }
         }

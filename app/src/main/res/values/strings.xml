@@ -20,11 +20,17 @@
     <string name="welcome_title">Welcome to Toadua</string>
     <string name="welcome_subtitle">The collaborative Toaq dictionary</string>
     <string name="no_results">No results</string>
+    <string name="term">Term</string>
+    <string name="definition">Definition</string>
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
     <string name="comment">Comment</string>
     <string name="copy">Copy</string>
     <string name="delete">Delete</string>
+    <string name="confirm_delete">Are you sure you want to delete entry \'%s\'?</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="comment_title">Add a comment</string>
     <string name="back">Back</string>
     <string name="gloss">Gloss…</string>
     <string name="nav_open">Open</string>

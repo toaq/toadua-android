@@ -7,7 +7,7 @@ data class Entry(
     val user: String,
     val date: String, // TODO: change type
     val scope: String,
-    val score: Int,
-    val vote: Int?, // TODO: change type
-    val notes: Array<Note>,
+    var score: Int,
+    var vote: Int?, // TODO: change type
+    val notes: MutableList<Note>,
 )

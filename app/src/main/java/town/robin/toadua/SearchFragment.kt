@@ -1,11 +1,17 @@
 package town.robin.toadua
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.FrameLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -22,7 +28,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.Entry
 import town.robin.toadua.api.Note
-import town.robin.toadua.api.ToaduaService
 import town.robin.toadua.databinding.CommentBinding
 import town.robin.toadua.databinding.FragmentSearchBinding
 import town.robin.toadua.databinding.EntryCardBinding
@@ -30,29 +35,31 @@ import town.robin.toadua.databinding.EntryCardBinding
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val activityModel: ToaduaViewModel by activityViewModels {
-        ToaduaViewModelFactory(requireContext())
+        ToaduaViewModel.Factory(requireContext())
     }
     private val model: SearchViewModel by viewModels {
-        SearchViewModelFactory(ToaduaService.create(activityModel.prefs.server))
+        SearchViewModel.Factory(activityModel.api, activityModel.prefs)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        val resultsAdapter = ResultsAdapter(model.results.value)
+        val resultsAdapter = ResultsAdapter(model.uiResults.value.list)
         binding.results.apply {
             adapter = resultsAdapter
             layoutManager = LinearLayoutManager(context)
+            itemAnimator?.changeDuration = 0
         }
-
         binding.sortSpinner.adapter = ArrayAdapter.createFromResource(
             requireContext(), R.array.sort_options, R.layout.spinner_item,
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
+        binding.createButton.visibility = if (activityModel.loggedIn) View.VISIBLE else View.INVISIBLE
 
         binding.menuButton.setOnClickListener {
             findNavController().apply {
@@ -67,9 +74,23 @@ class SearchFragment : Fragment() {
                 else -> View.VISIBLE
             }
         }
-
         binding.searchInput.doOnTextChanged { text, _, _, _ ->
             model.query.value = text?.toString() ?: ""
+        }
+        binding.createButton.setOnClickListener {
+            binding.createTermInput.text.clear()
+            binding.createDefinitionInput.text.clear()
+            binding.createCard.visibility = View.VISIBLE
+            binding.createButton.visibility = View.GONE
+            focusInput(binding.createTermInput)
+        }
+        binding.cancelButton.setOnClickListener {
+            binding.createCard.visibility = View.GONE
+            binding.createButton.visibility = View.VISIBLE
+        }
+        binding.submitButton.setOnClickListener {
+            binding.createCard.visibility = View.GONE
+            binding.createButton.visibility = View.VISIBLE
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -82,16 +103,43 @@ class SearchFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.results.collect {
+                    model.uiResults.value = LiveList(it.toMutableList(), null, UpdateAction.ADD)
+                    // TODO: cancel any pending actions
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.uiResults.collect {
                     resultsAdapter.apply {
-                        results = it
-                        selected.value = null
-                        notifyDataSetChanged()
+                        results = it.list
+                        when (it.updateIndex) {
+                            null -> {
+                                // The entire list was changed
+                                selected.value = null
+                                notifyDataSetChanged()
+                            }
+                            else -> when (it.updateAction) {
+                                // A single entry was changed
+                                UpdateAction.ADD -> {
+                                    if (selected.value != null && it.updateIndex <= selected.value!!)
+                                        selected.value = selected.value!! + 1
+                                    notifyItemInserted(it.updateIndex)
+                                }
+                                UpdateAction.REMOVE -> {
+                                    selected.value = null
+                                    notifyItemRemoved(it.updateIndex)
+                                }
+                                UpdateAction.MODIFY -> notifyItemChanged(it.updateIndex)
+                            }
+                        }
                     }
 
                     binding.welcomeCard.visibility =
-                        if (it.isEmpty() && model.query.value.isBlank()) View.VISIBLE else View.GONE
+                        if (it.list.isEmpty() && model.query.value.isBlank()) View.VISIBLE else View.GONE
                     binding.noResultsCard.visibility =
-                        if (it.isEmpty() && model.query.value.isNotBlank()) View.VISIBLE else View.GONE
+                        if (it.list.isEmpty() && model.query.value.isNotBlank()) View.VISIBLE else View.GONE
+                    binding.createCard.visibility = View.GONE
                 }
             }
         }
@@ -99,7 +147,7 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
-    private inner class ResultsAdapter(var results: Array<Entry>) : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
+    private inner class ResultsAdapter(var results: List<Entry>) : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
         inner class ViewHolder(val binding: EntryCardBinding) : RecyclerView.ViewHolder(binding.root)
 
         val selected = MutableLiveData<Int?>() // TODO: move to vm
@@ -117,34 +165,88 @@ class SearchFragment : Fragment() {
                 author.text = entry.user
                 score.text = if (entry.score > 0) "+${entry.score}" else if (entry.score < 0) "${entry.score}" else ""
 
-                comments.visibility = if (entry.notes.isEmpty()) View.GONE else View.VISIBLE
-                delete.visibility = if (entry.user == activityModel.username) View.VISIBLE else View.INVISIBLE
+                comments.apply {
+                    adapter = CommentsAdapter(entry.notes)
+                    layoutManager = LinearLayoutManager(context)
+                }
 
+                like.setImageResource(if (entry.vote == 1) R.drawable.ic_like_active else R.drawable.ic_like_inactive)
+                dislike.setImageResource(if (entry.vote == -1) R.drawable.ic_dislike_active else R.drawable.ic_dislike_inactive)
+                delete.visibility = if (entry.user == activityModel.prefs.username) View.VISIBLE else View.INVISIBLE
+
+                // TODO: do this the non-deprecated way
                 val color = resources.getColor(if (entry.user == "official") R.color.pink else R.color.blue)
                 author.setTextColor(color)
                 entryControls.setBackgroundColor(color)
-            }
 
-            holder.binding.comments.apply {
-                adapter = CommentsAdapter(entry.notes)
-                layoutManager = LinearLayoutManager(context)
-            }
+                this.entry.setOnClickListener {
+                    selected.value = when (selected.value) {
+                        holder.adapterPosition -> null
+                        else -> holder.adapterPosition
+                    }
+                }
+                like.setOnClickListener {
+                    model.voteOnEntry(holder.adapterPosition, if (entry.vote == 1) 0 else 1)
+                }
+                dislike.setOnClickListener {
+                    model.voteOnEntry(holder.adapterPosition, if (entry.vote == -1) 0 else -1)
+                }
+                comment.setOnClickListener {
+                    val input = EditText(requireContext()).apply {
+                        layoutParams = FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                        ).apply {
+                            val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+                            marginStart = margin
+                            marginEnd = margin
+                        }
+                    }
+                    AlertDialog.Builder(requireContext())
+                        .setTitle(R.string.comment_title)
+                        .setView(FrameLayout(requireContext()).apply { addView(input) })
+                        .setPositiveButton(R.string.submit) { _, _ ->
+                            model.commentOnEntry(holder.adapterPosition, input.text.toString())
+                        }
+                        .setNegativeButton(R.string.cancel) { _, _ -> }
+                        .show().apply {
+                            val button = getButton(AlertDialog.BUTTON_POSITIVE)
+                            button.isEnabled = false
+                            input.doOnTextChanged { text, _, _, _ ->
+                                button.isEnabled = text?.isNotBlank() ?: false
+                            }
+                        }
 
-            holder.binding.entry.setOnClickListener {
-                selected.value = when (holder.binding.entryControls.visibility) {
-                    View.VISIBLE -> null
-                    else -> position
+                    input.postDelayed({ focusInput(input) },200)
+                }
+                copy.setOnClickListener {
+                    binding.createTermInput.setText(entry.head)
+                    binding.createDefinitionInput.setText(entry.body)
+                    binding.createCard.visibility = View.VISIBLE
+                    binding.createButton.visibility = View.GONE
+                    focusInput(binding.createTermInput)
+                }
+                delete.setOnClickListener {
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(getString(R.string.confirm_delete, entry.head))
+                        .setPositiveButton(R.string.delete) { _, _ ->
+                            model.deleteEntry(holder.adapterPosition)
+                        }
+                        .setNegativeButton(R.string.cancel) { _, _ -> }
+                        .show()
                 }
             }
 
             selected.observe(viewLifecycleOwner) {
+                val thisSelected = it == holder.adapterPosition
                 TransitionManager.beginDelayedTransition(holder.binding.root, ChangeBounds().apply { duration = 150 })
-                holder.binding.entryControls.visibility = if (it == position) View.VISIBLE else View.GONE
+                holder.binding.entryControls.visibility = if (thisSelected && activityModel.loggedIn) View.VISIBLE else View.GONE
+                holder.binding.comments.visibility = if (thisSelected && entry.notes.isNotEmpty()) View.VISIBLE else View.GONE
             }
         }
     }
 
-    private inner class CommentsAdapter(val comments: Array<Note>) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
+    private inner class CommentsAdapter(val comments: List<Note>) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
         inner class ViewHolder(val binding: CommentBinding) : RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -160,5 +262,11 @@ class SearchFragment : Fragment() {
                 commentText.text = comment.content
             }
         }
+    }
+
+    private fun focusInput(view: View) {
+        view.requestFocus()
+        (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 }

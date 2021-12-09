@@ -14,6 +14,7 @@ interface ToaduaService {
     @POST("/api") suspend fun welcome(@Body body: WelcomeRequest): WelcomeResponse
     @POST("/api") suspend fun search(@Body body: SearchRequest): SearchResponse
     @POST("/api") suspend fun create(@Body body: CreateRequest): CreateResponse
+    @POST("/api") suspend fun remove(@Body body: RemoveRequest): RemoveResponse
     @POST("/api") suspend fun vote(@Body body: VoteRequest): VoteResponse
     @POST("/api") suspend fun note(@Body body: NoteRequest): NoteResponse
 

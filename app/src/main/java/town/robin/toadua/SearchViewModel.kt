@@ -18,9 +18,11 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
 
     val query = MutableStateFlow("")
     val loading = MutableStateFlow(false)
+    val createMode = MutableStateFlow(false)
 
     @ExperimentalCoroutinesApi @FlowPreview
     val results: StateFlow<MutableList<Entry>> = query.debounce(250).mapLatest { query ->
+        if (createMode.value && query.isNotEmpty()) createMode.value = false
         val terms = query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
         if (terms.isEmpty()) {
             mutableListOf()
@@ -36,6 +38,14 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
         initialValue = mutableListOf()
     )
     val uiResults = MutableStateFlow(LiveList<Entry>(mutableListOf(), null, UpdateAction.ADD))
+
+    fun createEntry(term: String, definition: String) {
+        viewModelScope.launch {
+            val create = api.create(CreateRequest(prefs.authToken!!, term, definition, prefs.language))
+            uiResults.value = LiveList(mutableListOf(create.entry!!), null, UpdateAction.ADD)
+            createMode.value = false
+        }
+    }
 
     fun voteOnEntry(index: Int, vote: Int) {
         viewModelScope.launch {

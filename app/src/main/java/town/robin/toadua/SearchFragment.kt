@@ -85,23 +85,40 @@ class SearchFragment : Fragment() {
         binding.createButton.setOnClickListener {
             binding.createTermInput.text.clear()
             binding.createDefinitionInput.text.clear()
-            binding.createCard.visibility = View.VISIBLE
-            binding.createButton.visibility = View.GONE
-            focusInput(binding.createTermInput)
+            model.createMode.value = true
         }
         binding.cancelButton.setOnClickListener {
-            binding.createCard.visibility = View.GONE
-            binding.createButton.visibility = View.VISIBLE
+            model.createMode.value = false
         }
         binding.submitButton.setOnClickListener {
-            binding.createCard.visibility = View.GONE
-            binding.createButton.visibility = View.VISIBLE
+            model.createEntry(binding.createTermInput.text.toString(), binding.createDefinitionInput.text.toString())
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.loading.collect {
                     binding.loadingIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.createMode.collect {
+                    if (it) {
+                        binding.results.visibility = View.GONE
+                        binding.welcomeCard.visibility = View.GONE
+                        binding.noResultsCard.visibility = View.GONE
+                        binding.createCard.visibility = View.VISIBLE
+                        binding.createButton.visibility = View.GONE
+                        binding.searchInput.text.clear()
+                        focusInput(binding.createTermInput)
+                    } else {
+                        binding.results.visibility = View.VISIBLE
+                        binding.welcomeCard.visibility = if (model.uiResults.value.list.isEmpty() && model.query.value.isBlank()) View.VISIBLE else View.GONE
+                        binding.noResultsCard.visibility = if (model.uiResults.value.list.isEmpty() && model.query.value.isNotBlank()) View.VISIBLE else View.GONE
+                        binding.createCard.visibility = View.GONE
+                        binding.createButton.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -141,10 +158,9 @@ class SearchFragment : Fragment() {
                     }
 
                     binding.welcomeCard.visibility =
-                        if (it.list.isEmpty() && model.query.value.isBlank()) View.VISIBLE else View.GONE
+                        if (!model.createMode.value && it.list.isEmpty() && model.query.value.isBlank()) View.VISIBLE else View.GONE
                     binding.noResultsCard.visibility =
-                        if (it.list.isEmpty() && model.query.value.isNotBlank()) View.VISIBLE else View.GONE
-                    binding.createCard.visibility = View.GONE
+                        if (!model.createMode.value && it.list.isEmpty() && model.query.value.isNotBlank()) View.VISIBLE else View.GONE
                 }
             }
         }
@@ -227,9 +243,7 @@ class SearchFragment : Fragment() {
                 copy.setOnClickListener {
                     binding.createTermInput.setText(entry.head)
                     binding.createDefinitionInput.setText(entry.body)
-                    binding.createCard.visibility = View.VISIBLE
-                    binding.createButton.visibility = View.GONE
-                    focusInput(binding.createTermInput)
+                    model.createMode.value = true
                 }
                 delete.setOnClickListener {
                     AlertDialog.Builder(requireContext())

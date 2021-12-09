@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.net.URI
 
 class AuthFragment : Fragment() {
     private lateinit var binding: FragmentAuthBinding
@@ -37,16 +38,14 @@ class AuthFragment : Fragment() {
     ): View {
         binding = FragmentAuthBinding.inflate(inflater, container, false)
 
+        binding.authServer.text = URI(activityModel.prefs.server).host
+
         binding.continueButton.setOnClickListener {
             when (authType) {
                 AuthType.SIGN_IN -> model::login
                 AuthType.CREATE_ACCOUNT -> model::createAccount
             }.let { it(binding.usernameInput.text.toString(), binding.passwordInput.text.toString()) }
         }
-        binding.skipButton.setOnClickListener {
-            findNavController().navigate(R.id.auth_to_search)
-        }
-
         binding.createAccountButton.setOnClickListener {
             when (authType) {
                 AuthType.SIGN_IN -> {
@@ -60,6 +59,9 @@ class AuthFragment : Fragment() {
                     binding.createAccountButton.text = getString(R.string.create_account)
                 }
             }
+        }
+        binding.skipButton.setOnClickListener {
+            findNavController().navigate(R.id.auth_to_search)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

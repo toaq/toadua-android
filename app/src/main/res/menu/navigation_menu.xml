@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"><![CDATA[
 
         xmlns:tools="http://schemas.android.com/tools"
         tools:ignore="HardcodedText">
 
+        ]]>
         <item
-            android:id="@+id/nav_account"
-            android:title="Switch Language"
-            android:icon="@drawable/ic_baseline_language_24"/>
-
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_baseline_search_24"
+            android:title="Search" />
         <item
-            android:id="@+id/nav_settings"
+            android:id="@+id/nav_glosser"
             android:title="Glosser"
             android:icon="@drawable/ic_baseline_menu_book_24"/>
 
         <item
-            android:id="@+id/nav_search"
-            android:title="Search"
-            android:icon="@drawable/ic_baseline_search_24"/>
-
+            android:id="@+id/nav_language"
+            android:icon="@drawable/ic_baseline_language_24"
+            android:title="Switch Language" />
         <item
             android:id="@+id/nav_logout"
-            android:title="Logout"
-            android:icon="@drawable/ic_baseline_login_24"/>
+            android:icon="@drawable/ic_baseline_login_24"
+            android:title="Log out" />
 
 
 </menu>

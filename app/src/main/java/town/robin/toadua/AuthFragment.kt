@@ -102,9 +102,9 @@ class AuthFragment : Fragment() {
         val navigation = binding.mynavigationview
         navigation.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_account->                 // Handle menu click
+                R.id.nav_language->                 // Handle menu click
                     true
-                R.id.nav_settings ->    {             // Handle settings click
+                R.id.nav_glosser ->    {             // Handle settings click
                     findNavController().apply {
                         //item.setTitle("Search")
                         popBackStack()

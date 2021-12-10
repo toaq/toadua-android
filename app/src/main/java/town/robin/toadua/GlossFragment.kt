@@ -1,13 +1,17 @@
 package town.robin.toadua
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.FrameLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -50,9 +54,35 @@ class GlossFragment : Fragment() {
         navigation.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
 
-                R.id.nav_account->                 // Handle menu click
-                    true
-                R.id.nav_settings ->    {             // Handle settings click
+                R.id.nav_language-> {                // Handle menu click
+                    val input = EditText(requireContext()).apply {
+                        layoutParams = FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                        ).apply {
+                            setText(activityModel.prefs.language)
+                            val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
+                            marginStart = margin
+                            marginEnd = margin
+                        }
+                    }
+                    AlertDialog.Builder(requireContext())
+                        .setTitle(R.string.language)
+                        .setView(FrameLayout(requireContext()).apply { addView(input) })
+                        .setPositiveButton(R.string.confirm) { _, _ ->
+                            activityModel.prefs.language = input.text.toString()
+                        }
+                        .setNegativeButton(R.string.cancel) { _, _ -> }
+                        .show().apply {
+                            val button = getButton(AlertDialog.BUTTON_POSITIVE)
+                            input.doOnTextChanged { text, _, _, _ ->
+                                button.isEnabled = text?.isNotBlank() ?: false
+                            }
+                        }
+
+                    input.postDelayed({ focusInput(input) },200)
+                    true}
+                R.id.nav_glosser ->    {             // Handle settings click
                     findNavController().apply {
                         //item.setTitle("Search")
                         popBackStack()
@@ -128,5 +158,11 @@ class GlossFragment : Fragment() {
             holder.binding.glossTerm.text = term
             holder.binding.glossDefinition.text = entry?.body ?: getString(R.string.missing_gloss)
         }
+    }
+
+    private fun focusInput(view: View) {
+        view.requestFocus()
+        (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 }

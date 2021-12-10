@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.Entry
 import town.robin.toadua.api.Note
+import town.robin.toadua.api.SortOrder
 import town.robin.toadua.databinding.CommentBinding
 import town.robin.toadua.databinding.FragmentSearchBinding
 import town.robin.toadua.databinding.EntryCardBinding
@@ -65,7 +67,7 @@ class SearchFragment : Fragment() {
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        val resultsAdapter = ResultsAdapter(model.uiResults.value.list)
+        val resultsAdapter = ResultsAdapter(model.uiResults.value?.list ?: listOf())
         binding.results.apply {
             adapter = resultsAdapter
             layoutManager = LinearLayoutManager(context)
@@ -127,7 +129,25 @@ class SearchFragment : Fragment() {
         }
         binding.searchInput.doOnTextChanged { text, _, _, _ ->
             model.query.value = text?.toString() ?: ""
-            binding.clearButton.visibility = if (text?.isEmpty() != false) View.GONE else View.VISIBLE
+        }
+        binding.userInput.doOnTextChanged { text, _, _, _ ->
+            model.userFilter.value = text?.toString() ?: ""
+        }
+        binding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                model.sortOrder.value = when (position) {
+                    0 -> null
+                    1 -> SortOrder.NEWEST
+                    2 -> SortOrder.OLDEST
+                    3 -> SortOrder.HIGHEST
+                    4 -> SortOrder.LOWEST
+                    else -> SortOrder.RANDOM
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                model.sortOrder.value = null
+            }
         }
         binding.createButton.setOnClickListener {
             binding.createTermInput.text.clear()
@@ -161,8 +181,8 @@ class SearchFragment : Fragment() {
                         focusInput(binding.createTermInput)
                     } else {
                         binding.results.visibility = View.VISIBLE
-                        binding.welcomeCard.visibility = if (model.uiResults.value.list.isEmpty() && model.query.value.isBlank()) View.VISIBLE else View.GONE
-                        binding.noResultsCard.visibility = if (model.uiResults.value.list.isEmpty() && model.query.value.isNotBlank()) View.VISIBLE else View.GONE
+                        binding.welcomeCard.visibility = if (model.uiResults.value == null) View.VISIBLE else View.GONE
+                        binding.noResultsCard.visibility = if (model.uiResults.value?.list?.isEmpty() == true) View.VISIBLE else View.GONE
                         binding.createCard.visibility = View.GONE
                         binding.createButton.visibility = View.VISIBLE
                     }
@@ -171,8 +191,8 @@ class SearchFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                model.results.collect {
-                    model.uiResults.value = LiveList(it.toMutableList(), null, UpdateAction.ADD)
+                model.results.collect { results ->
+                    model.uiResults.value = results?.let { LiveList(it, null, UpdateAction.ADD) }
                     // TODO: cancel any pending actions
                 }
             }
@@ -181,8 +201,8 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.uiResults.collect {
                     resultsAdapter.apply {
-                        results = it.list
-                        when (it.updateIndex) {
+                        results = it?.list ?: listOf()
+                        when (it?.updateIndex) {
                             null -> {
                                 // The entire list was changed
                                 selected.value = null
@@ -205,10 +225,10 @@ class SearchFragment : Fragment() {
                     }
 
                     binding.welcomeCard.visibility =
-                        if (!model.createMode.value && it.list.isEmpty() && model.query.value.isBlank()) View.VISIBLE else View.GONE
+                        if (!model.createMode.value && it == null) View.VISIBLE else View.GONE
                     binding.noResultsCard.visibility =
-                        if (!model.createMode.value && it.list.isEmpty() && model.query.value.isNotBlank()) View.VISIBLE else View.GONE
-                }
+                        if (!model.createMode.value && it?.list?.isEmpty() == true) View.VISIBLE else View.GONE
+               }
             }
         }
 

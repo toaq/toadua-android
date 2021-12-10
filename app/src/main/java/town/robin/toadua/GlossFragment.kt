@@ -7,18 +7,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import town.robin.toadua.databinding.FragmentGlossBinding
 import town.robin.toadua.databinding.GlossCardBinding
 
-
-
-
-
 class GlossFragment : Fragment() {
     private lateinit var binding: FragmentGlossBinding
+    private val activityModel: ToaduaViewModel by activityViewModels {
+        ToaduaViewModel.Factory(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +51,10 @@ class GlossFragment : Fragment() {
                         navigate(R.id.search_fragment)
                     }
                     true}
-                R.id.nav_logout ->                 // Handle logout click
-                    true
+                R.id.nav_logout -> {                // Handle logout click
+                    activityModel.logOut()
+                    findNavController().navigate(R.id.auth_fragment)
+                    true}
                 R.id.nav_changeserver ->                 // Handle logout click
                     true
                 else -> false

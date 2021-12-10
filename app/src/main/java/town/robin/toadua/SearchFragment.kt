@@ -100,8 +100,10 @@ class SearchFragment : Fragment() {
                         navigate(R.id.search_fragment)
                     }
                     true}
-                R.id.nav_logout ->                 // Handle logout click
-                    true
+                R.id.nav_logout -> {                // Handle logout click
+                    activityModel.logOut()
+                    findNavController().navigate(R.id.auth_fragment)
+                    true}
                 R.id.nav_changeserver ->                 // Handle logout click
                     true
                 else -> false

@@ -1,8 +1,12 @@
 package town.robin.toadua
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import town.robin.toadua.api.LogoutRequest
 import town.robin.toadua.api.ToaduaService
 
 class ToaduaViewModel(context: Context) : ViewModel() {
@@ -17,5 +21,14 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     fun invalidateSession() {
         prefs.authToken = null
         prefs.username = null
+    }
+
+    fun logOut() {
+        viewModelScope.launch {
+            val logout = api.logout(LogoutRequest(prefs.authToken!!))
+            if (!logout.success)
+                Log.w("logOut", "Failed to log out: ${logout.error}")
+            invalidateSession()
+        }
     }
 }

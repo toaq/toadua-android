@@ -1,13 +1,12 @@
 package town.robin.toadua
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.*
 
@@ -17,27 +16,36 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
     }
 
     val query = MutableStateFlow("")
+    val userFilter = MutableStateFlow("")
+    val sortOrder = MutableStateFlow<SortOrder?>(null)
+
     val loading = MutableStateFlow(false)
     val createMode = MutableStateFlow(false)
 
-    @ExperimentalCoroutinesApi @FlowPreview
-    val results: StateFlow<MutableList<Entry>> = query.debounce(250).mapLatest { query ->
-        if (createMode.value && query.isNotEmpty()) createMode.value = false
-        val terms = query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
-        if (terms.isEmpty()) {
-            mutableListOf()
+    @FlowPreview @ExperimentalCoroutinesApi
+    val results = combine(query, userFilter, sortOrder) { query, userFilter, sortOrder ->
+        Triple(query, userFilter, sortOrder)
+    }.debounce(250).mapLatest { (query, userFilter, sortOrder) ->
+        if (createMode.value && (query.isNotEmpty() || userFilter.isNotEmpty()))
+            createMode.value = false
+
+        if (query.isBlank() && userFilter.isBlank()) {
+            null
         } else {
             loading.value = true
-            val response = api.search(SearchRequest(prefs.authToken, terms))
+            val search = api.search(SearchRequest(
+                prefs.authToken,
+                query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() },
+                if (userFilter.isBlank()) null else userFilter,
+                sortOrder,
+            ))
             loading.value = false
-            response.results ?: mutableListOf()
+
+            if (!search.success) Log.w("search", "Failed to search: ${search.error}")
+            search.results ?: mutableListOf()
         }
-    }.flowOn(Dispatchers.IO).stateIn(
-        scope = viewModelScope,
-        started = WhileSubscribed(5000),
-        initialValue = mutableListOf()
-    )
-    val uiResults = MutableStateFlow(LiveList<Entry>(mutableListOf(), null, UpdateAction.ADD))
+    }
+    val uiResults = MutableStateFlow<LiveList<Entry>?>(null)
 
     fun createEntry(term: String, definition: String) {
         viewModelScope.launch {
@@ -49,7 +57,7 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
 
     fun voteOnEntry(index: Int, vote: Int) {
         viewModelScope.launch {
-            val list = uiResults.value.list
+            val list = uiResults.value!!.list
             val entry = list[index]
             entry.score += vote - entry.vote!!
             entry.vote = vote
@@ -60,7 +68,7 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
 
     fun commentOnEntry(index: Int, comment: String) {
         viewModelScope.launch {
-            val list = uiResults.value.list
+            val list = uiResults.value!!.list
             val entry = list[index]
             loading.value = true
             api.note(NoteRequest(prefs.authToken!!, entry.id, comment))
@@ -72,7 +80,7 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
 
     fun deleteEntry(index: Int) {
         viewModelScope.launch {
-            val list = uiResults.value.list
+            val list = uiResults.value!!.list
             loading.value = true
             api.remove(RemoveRequest(prefs.authToken!!, list[index].id))
             loading.value = false

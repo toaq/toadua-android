@@ -5,10 +5,6 @@
         tools:ignore="HardcodedText">
 
         <item
-            android:id="@+id/home"
-            android:title="Home"
-            android:icon="@drawable/ic_baseline_home_24"/>
-        <item
             android:id="@+id/nav_account"
             android:title="Switch Language"
             android:icon="@drawable/ic_baseline_language_24"/>

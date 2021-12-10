@@ -118,13 +118,7 @@ class AuthFragment : Fragment() {
                         navigate(R.id.search_fragment)
                     }
                     true}
-                R.id.home ->    {             // Handle settings click
-                    findNavController().apply {
-                        //getActivity()?.setTitle("Search")
-                        popBackStack()
-                        navigate(R.id.auth_fragment)
-                    }
-                    true}
+
                 R.id.nav_logout ->                 // Handle logout click
                     true
                 R.id.nav_changeserver ->                 // Handle logout click

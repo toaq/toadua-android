@@ -35,6 +35,13 @@ class GlossFragment : Fragment() {
         val navigation = binding.mynavigationview
         navigation.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.home ->    {             // Handle settings click
+                    findNavController().apply {
+                        //getActivity()?.setTitle("Search")
+                        popBackStack()
+                        navigate(R.id.auth_fragment)
+                    }
+                    true}
                 R.id.nav_account->                 // Handle menu click
                     true
                 R.id.nav_settings ->    {             // Handle settings click

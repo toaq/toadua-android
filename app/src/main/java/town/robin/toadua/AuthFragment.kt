@@ -97,6 +97,44 @@ class AuthFragment : Fragment() {
             findNavController().navigate(R.id.auth_to_search)
         }
 
+
+        //new start
+        val navigation = binding.mynavigationview
+        navigation.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_account->                 // Handle menu click
+                    true
+                R.id.nav_settings ->    {             // Handle settings click
+                    findNavController().apply {
+                        //item.setTitle("Search")
+                        popBackStack()
+                        navigate(R.id.gloss_fragment)
+                    }
+                    true}
+                R.id.nav_search ->    {             // Handle settings click
+                    findNavController().apply {
+                        //getActivity()?.setTitle("Search")
+                        popBackStack()
+                        navigate(R.id.search_fragment)
+                    }
+                    true}
+                R.id.home ->    {             // Handle settings click
+                    findNavController().apply {
+                        //getActivity()?.setTitle("Search")
+                        popBackStack()
+                        navigate(R.id.auth_fragment)
+                    }
+                    true}
+                R.id.nav_logout ->                 // Handle logout click
+                    true
+                R.id.nav_changeserver ->                 // Handle logout click
+                    true
+                else -> false
+            }
+        }
+//new end
+
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.loading.collect {

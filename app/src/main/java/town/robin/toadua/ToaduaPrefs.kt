@@ -17,7 +17,7 @@ fun SharedPreferences.string(key: String, default: String) = StringPref(key, def
 fun SharedPreferences.nullableString(key: String) = NullableStringPref(key, this)
 
 class ToaduaPrefs(prefs: SharedPreferences) {
-    var server: String by prefs.string("server", "http://[::1]:29138/")
+    var server: String by prefs.string("server", "https://toadua.uakci.pl/")
     var authToken: String? by prefs.nullableString("auth_token")
     var language: String by prefs.string("language", "en")
     var username: String? by prefs.nullableString("username")

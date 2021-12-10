@@ -23,10 +23,6 @@
             android:id="@+id/nav_logout"
             android:title="Logout"
             android:icon="@drawable/ic_baseline_login_24"/>
-        <item
-            android:id="@+id/nav_changeserver"
-            android:title="Change Server"
-            android:icon="@drawable/ic_baseline_cloud_queue_24"
-            />
+
 
 </menu>

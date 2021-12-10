@@ -121,8 +121,7 @@ class AuthFragment : Fragment() {
 
                 R.id.nav_logout ->                 // Handle logout click
                     true
-                R.id.nav_changeserver ->                 // Handle logout click
-                    true
+
                 else -> false
             }
         }

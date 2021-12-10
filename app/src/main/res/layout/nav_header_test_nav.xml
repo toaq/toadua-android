@@ -12,21 +12,22 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:contentDescription="@string/nav_header_desc"
+        android:cropToPadding="true"
         app:srcCompat="@drawable/jemu" />
 
     <TextView
+        android:id="@+id/auth_status"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Logged in as "
-        android:textColor = "#5d5d5d"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#5d5d5d" />
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         android:text="robintown"
@@ -34,7 +35,7 @@
         android:textStyle="bold"
         android:textColor="#5d5d5d" />
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/server"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:text="toadoa.uakci.pl"

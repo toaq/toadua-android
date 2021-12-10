@@ -23,7 +23,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.ToaduaService
-import java.net.URI
 
 class AuthFragment : Fragment() {
     private lateinit var binding: FragmentAuthBinding
@@ -44,7 +43,7 @@ class AuthFragment : Fragment() {
     ): View {
         binding = FragmentAuthBinding.inflate(inflater, container, false)
 
-        binding.authServer.text = URI(activityModel.prefs.server).host
+        binding.authServer.text = activityModel.serverName
 
         binding.continueButton.setOnClickListener {
             when (authType) {
@@ -84,7 +83,7 @@ class AuthFragment : Fragment() {
                 .setPositiveButton(R.string.confirm) { _, _ ->
                     val server = input.text.toString()
                     activityModel.prefs.server = server
-                    binding.authServer.text = URI(server).host
+                    binding.authServer.text = activityModel.serverName
                     activityModel.api = ToaduaService.create(server)
                     model.api = activityModel.api
                 }

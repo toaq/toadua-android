@@ -8,10 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
@@ -34,6 +30,7 @@ import town.robin.toadua.databinding.CommentBinding
 import town.robin.toadua.databinding.FragmentSearchBinding
 import town.robin.toadua.databinding.EntryCardBinding
 import android.view.Gravity
+import android.widget.*
 
 
 import com.google.android.material.internal.NavigationMenu
@@ -71,6 +68,15 @@ class SearchFragment : Fragment() {
 
         //new start
         val navigation = binding.mynavigationview
+        val header = navigation.getHeaderView(0)
+        if (activityModel.loggedIn) {
+            header.findViewById<TextView>(R.id.auth_status).setText(R.string.logged_in_as)
+            header.findViewById<TextView>(R.id.username).text = activityModel.prefs.username
+        } else {
+            header.findViewById<TextView>(R.id.auth_status).setText(R.string.connected_to)
+            header.findViewById<TextView>(R.id.username).visibility = View.GONE
+        }
+        header.findViewById<TextView>(R.id.server).text = activityModel.serverName
         navigation.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
 

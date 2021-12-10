@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.LogoutRequest
 import town.robin.toadua.api.ToaduaService
+import java.net.URI
 
 class ToaduaViewModel(context: Context) : ViewModel() {
     class Factory(private val context: Context) : ViewModelProvider.Factory {
@@ -17,6 +18,7 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     val prefs = ToaduaPrefs(context.getSharedPreferences("prefs", Context.MODE_PRIVATE))
     var api = ToaduaService.create(prefs.server)
     val loggedIn get() = prefs.authToken != null
+    val serverName get() = URI(prefs.server).host
 
     fun invalidateSession() {
         prefs.authToken = null

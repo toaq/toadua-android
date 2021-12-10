@@ -13,21 +13,21 @@ class SearchRequest(val token: String?, val query: List<Any>, sortOrder: SortOrd
     }
 
     companion object {
-        fun search(token: String?, terms: List<String>, userFilter: String?, sortOrder: SortOrder?): SearchRequest {
+        fun search(token: String?, language: String, terms: List<String>, userFilter: String?, sortOrder: SortOrder?): SearchRequest {
             val conjuncts = terms.map { listOf("term", it) }.toMutableList()
             if (userFilter != null) conjuncts.add(listOf("user", userFilter))
-            val query =
-                if (conjuncts.size == 1) conjuncts.first()
-                else listOf("and", *conjuncts.toTypedArray())
+            val query = listOf("and", listOf("scope", language), *conjuncts.toTypedArray())
 
             return SearchRequest(token, query, sortOrder)
         }
 
-        fun gloss(token: String?, terms: List<String>): SearchRequest {
+        fun gloss(token: String?, language: String, terms: List<String>): SearchRequest {
             val conjuncts = terms.map { listOf("term", it) }
-            val query =
-                if (conjuncts.size == 1) conjuncts.first()
-                else listOf("or", *conjuncts.toTypedArray())
+            val query = listOf(
+                "and",
+                listOf("scope", language),
+                if (conjuncts.size == 1) conjuncts.first() else listOf("or", *conjuncts.toTypedArray())
+            )
 
             return SearchRequest(token, query, null)
         }

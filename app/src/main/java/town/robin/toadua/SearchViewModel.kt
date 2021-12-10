@@ -35,6 +35,7 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
             loading.value = true
             val search = api.search(SearchRequest.search(
                 prefs.authToken,
+                prefs.language,
                 query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() },
                 if (userFilter.isBlank()) null else userFilter,
                 sortOrder,

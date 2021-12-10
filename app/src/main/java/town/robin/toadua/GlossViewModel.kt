@@ -26,7 +26,7 @@ class GlossViewModel(private val api: ToaduaService, private val prefs: ToaduaPr
         } else {
             val terms = query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
             loading.value = true
-            val search = api.search(SearchRequest.gloss(prefs.authToken!!, terms))
+            val search = api.search(SearchRequest.gloss(prefs.authToken!!, prefs.language, terms))
             loading.value = false
 
             terms.map { term ->

@@ -1,9 +1,11 @@
 package town.robin.toadua
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -31,7 +33,12 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host)
 
         if (model.loggedIn) {
-            navController.navigate(R.id.search_fragment)
+            val glossQuery = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
+            if (glossQuery != null)
+                navController.navigate(R.id.gloss_fragment, bundleOf("query" to glossQuery))
+            else
+                navController.navigate(R.id.search_fragment)
+
             lifecycleScope.launch(Dispatchers.IO) { verifyAuth() }
         }
     }

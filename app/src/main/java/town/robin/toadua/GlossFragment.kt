@@ -107,6 +107,10 @@ class GlossFragment : Fragment() {
             }
         }
 
+        arguments?.getString("query")?.let {
+            binding.glossInput.setText(it)
+        }
+
         return binding.root
     }
 

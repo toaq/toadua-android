@@ -43,7 +43,8 @@
     <string name="cancel">Cancel</string>
     <string name="comment_title">Add a comment</string>
     <string name="back">Back</string>
-    <string name="gloss">Gloss…</string>
+    <string name="gloss">Gloss</string>
+    <string name="gloss_hint">Gloss…</string>
     <string name="missing_gloss">\???</string>
     <string name="nav_open">Open</string>
     <string name="nav_close">Close</string>

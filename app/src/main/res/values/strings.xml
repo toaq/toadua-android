@@ -21,8 +21,11 @@
     <string name="user">User</string>
     <string-array name="sort_options">
         <item>Sort by…</item>
-        <item>Oldest</item>
         <item>Newest</item>
+        <item>Oldest</item>
+        <item>Highest scoring</item>
+        <item>Lowest scoring</item>
+        <item>Random</item>
     </string-array>
     <string name="welcome_title">Welcome to Toadua</string>
     <string name="welcome_subtitle">The collaborative Toaq dictionary</string>

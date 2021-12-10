@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.Entry
 import town.robin.toadua.api.Note
+import town.robin.toadua.api.SortOrder
 import town.robin.toadua.databinding.CommentBinding
 import town.robin.toadua.databinding.FragmentSearchBinding
 import town.robin.toadua.databinding.EntryCardBinding
@@ -84,6 +86,22 @@ class SearchFragment : Fragment() {
         }
         binding.userInput.doOnTextChanged { text, _, _, _ ->
             model.userFilter.value = text?.toString() ?: ""
+        }
+        binding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                model.sortOrder.value = when (position) {
+                    0 -> null
+                    1 -> SortOrder.NEWEST
+                    2 -> SortOrder.OLDEST
+                    3 -> SortOrder.HIGHEST
+                    4 -> SortOrder.LOWEST
+                    else -> SortOrder.RANDOM
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                model.sortOrder.value = null
+            }
         }
         binding.createButton.setOnClickListener {
             binding.createTermInput.text.clear()

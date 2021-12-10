@@ -15,6 +15,11 @@
             android:icon="@drawable/ic_baseline_menu_book_24"/>
 
         <item
+            android:id="@+id/nav_search"
+            android:title="Search"
+            android:icon="@drawable/ic_baseline_search_24"/>
+
+        <item
             android:id="@+id/nav_logout"
             android:title="Logout"
             android:icon="@drawable/ic_baseline_login_24"/>

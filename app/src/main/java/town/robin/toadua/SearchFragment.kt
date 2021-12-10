@@ -3,6 +3,7 @@ package town.robin.toadua
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -31,9 +32,25 @@ import town.robin.toadua.api.Note
 import town.robin.toadua.databinding.CommentBinding
 import town.robin.toadua.databinding.FragmentSearchBinding
 import town.robin.toadua.databinding.EntryCardBinding
+import android.view.Gravity
+
+
+import androidx.drawerlayout.widget.DrawerLayout
+
+import androidx.annotation.NonNull
+import com.google.android.material.internal.NavigationMenu
+
+import com.google.android.material.navigation.NavigationView
+
+
+
+
+
+
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var binding2: NavigationMenu
     private val activityModel: ToaduaViewModel by activityViewModels {
         ToaduaViewModel.Factory(requireContext())
     }
@@ -61,13 +78,43 @@ class SearchFragment : Fragment() {
         }
         binding.createButton.visibility = if (activityModel.loggedIn) View.VISIBLE else View.INVISIBLE
 
-        binding.menuButton.setOnClickListener {
-            // TODO: open the side drawer instead
-            findNavController().apply {
-                popBackStack()
-                navigate(R.id.gloss_fragment)
+        //new start
+        val navigation = binding.mynavigationview
+        navigation.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_account->                 // Handle menu click
+                    true
+                R.id.nav_settings ->    {             // Handle settings click
+                    findNavController().apply {
+                        //getActivity()?.setTitle("Search")
+                        popBackStack()
+                        navigate(R.id.gloss_fragment)
+                    }
+                    true}
+                R.id.nav_search ->    {             // Handle settings click
+                    findNavController().apply {
+                        //getActivity()?.setTitle("Search")
+                        popBackStack()
+                        navigate(R.id.search_fragment)
+                    }
+                    true}
+                R.id.nav_logout ->                 // Handle logout click
+                    true
+                R.id.nav_changeserver ->                 // Handle logout click
+                    true
+                else -> false
             }
         }
+        //new end
+        binding.menuButton.setOnClickListener(View.OnClickListener {
+            val navDrawer = binding.myDrawerLayout
+            // If the navigation drawer is not open then open it, if its already open then close it.
+            if (!navDrawer.isDrawerOpen(Gravity.START)) navDrawer.openDrawer(Gravity.START) else navDrawer.closeDrawer(
+                Gravity.END
+            )
+        })
+
+
         binding.clearButton.setOnClickListener {
             binding.searchInput.text.clear()
         }

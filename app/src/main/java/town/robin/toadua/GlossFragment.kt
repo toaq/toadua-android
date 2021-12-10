@@ -1,5 +1,6 @@
 package town.robin.toadua
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -7,10 +8,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import town.robin.toadua.api.Entry
 import town.robin.toadua.databinding.FragmentGlossBinding
 import town.robin.toadua.databinding.GlossCardBinding
 
@@ -19,15 +28,20 @@ class GlossFragment : Fragment() {
     private val activityModel: ToaduaViewModel by activityViewModels {
         ToaduaViewModel.Factory(requireContext())
     }
+    private val model: GlossViewModel by viewModels {
+        GlossViewModel.Factory(activityModel.api, activityModel.prefs)
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentGlossBinding.inflate(inflater, container, false)
 
+        val resultsAdapter = ResultsAdapter(model.results.value ?: listOf())
         binding.results.apply {
-            adapter = ResultsAdapter()
+            adapter = resultsAdapter
             layoutManager = LinearLayoutManager(context)
         }
 
@@ -71,23 +85,44 @@ class GlossFragment : Fragment() {
             )
         })
 
+        binding.glossInput.doOnTextChanged { text, _, _, _ ->
+            model.query.value = text?.toString() ?: ""
+        }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.loading.collect {
+                    binding.loadingIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.results.collect {
+                    resultsAdapter.apply {
+                        results = it ?: listOf()
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
 
         return binding.root
     }
 
-    private inner class ResultsAdapter : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
+    private inner class ResultsAdapter(var results: List<Pair<String, Entry?>>) : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
         inner class ViewHolder(val binding: GlossCardBinding) : RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
             ViewHolder(GlossCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-        override fun getItemCount(): Int = 8
+        override fun getItemCount(): Int = results.size
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.binding.root.setOnClickListener {
-                findNavController().navigate(R.id.gloss_to_gloss_detail)
-            }
+            val (term, entry) = results[position]
+
+            holder.binding.glossTerm.text = term
+            holder.binding.glossDefinition.text = entry?.body ?: getString(R.string.missing_gloss)
         }
     }
 }

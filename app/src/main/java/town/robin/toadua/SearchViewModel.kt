@@ -33,25 +33,47 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
             null
         } else {
             loading.value = true
-            val search = api.search(SearchRequest.search(
-                prefs.authToken,
-                prefs.language,
-                query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() },
-                if (userFilter.isBlank()) null else userFilter,
-                sortOrder,
-            ))
-            loading.value = false
+            try {
+                val search = api.search(
+                    SearchRequest.search(
+                        prefs.authToken,
+                        prefs.language,
+                        query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() },
+                        if (userFilter.isBlank()) null else userFilter,
+                        sortOrder,
+                    )
+                )
+                loading.value = false
 
-            if (!search.success) Log.w("search", "Failed to search: ${search.error}")
-            search.results ?: mutableListOf()
+                if (search.success && search.results != null) {
+                    search.results
+                } else {
+                    Log.w("search", "Failed to search: ${search.error}")
+                    mutableListOf()
+                }
+            } catch (t: Throwable) {
+                loading.value = false
+                Log.w("search", "Failed to search", t)
+                mutableListOf()
+            }
         }
     }
     val uiResults = MutableStateFlow<LiveList<Entry>?>(null)
 
     fun createEntry(term: String, definition: String) {
         viewModelScope.launch {
-            val create = api.create(CreateRequest(prefs.authToken!!, term, definition, prefs.language))
-            uiResults.value = LiveList(mutableListOf(create.entry!!), null, UpdateAction.ADD)
+            loading.value = true
+            try {
+                val create = api.create(CreateRequest(prefs.authToken!!, term, definition, prefs.language))
+                if (create.success && create.entry != null) {
+                    uiResults.value = LiveList(mutableListOf(create.entry), null, UpdateAction.ADD)
+                } else {
+                    Log.w("createEntry", "Failed to create entry: ${create.error}")
+                }
+            } catch (t: Throwable) {
+                Log.w("createEntry", "Failed to create entry", t)
+            }
+            loading.value = false
             createMode.value = false
         }
     }
@@ -60,10 +82,18 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
         viewModelScope.launch {
             val list = uiResults.value!!.list
             val entry = list[index]
-            entry.score += vote - entry.vote!!
-            entry.vote = vote
-            uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
-            api.vote(VoteRequest(prefs.authToken!!, entry.id, vote))
+            try {
+                val response = api.vote(VoteRequest(prefs.authToken!!, entry.id, vote))
+                if (response.success) {
+                    entry.score += vote - entry.vote!!
+                    entry.vote = vote
+                    uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
+                } else {
+                    Log.w("voteOnEntry", "Failed to vote on entry: ${response.error}")
+                }
+            } catch (t: Throwable) {
+                Log.w("voteOnEntry", "Failed to vote on entry", t)
+            }
         }
     }
 
@@ -72,10 +102,18 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
             val list = uiResults.value!!.list
             val entry = list[index]
             loading.value = true
-            api.note(NoteRequest(prefs.authToken!!, entry.id, comment))
+            try {
+                val note = api.note(NoteRequest(prefs.authToken!!, entry.id, comment))
+                if (note.success) {
+                    entry.notes.add(Note("", prefs.username!!, comment))
+                    uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
+                } else {
+                    Log.w("commentOnEntry", "Failed to comment on entry: ${note.error}")
+                }
+            } catch (t: Throwable) {
+                Log.w("commentOnEntry", "Failed to comment on entry", t)
+            }
             loading.value = false
-            entry.notes.add(Note("", prefs.username!!, comment))
-            uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
         }
     }
 
@@ -83,9 +121,17 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
         viewModelScope.launch {
             val list = uiResults.value!!.list
             loading.value = true
-            api.remove(RemoveRequest(prefs.authToken!!, list[index].id))
+            try {
+                val remove = api.remove(RemoveRequest(prefs.authToken!!, list[index].id))
+                if (remove.success) {
+                    uiResults.value = LiveList(list.apply { removeAt(index) }, index, UpdateAction.REMOVE)
+                } else {
+                    Log.w("deleteEntry", "Failed to delete entry: ${remove.error}")
+                }
+            } catch (t: Throwable) {
+                Log.w("deleteEntry", "Failed to delete entry", t)
+            }
             loading.value = false
-            uiResults.value = LiveList(list.apply { removeAt(index) }, index, UpdateAction.REMOVE)
         }
     }
 }

@@ -1,5 +1,6 @@
 package town.robin.toadua
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -26,12 +27,23 @@ class GlossViewModel(private val api: ToaduaService, private val prefs: ToaduaPr
         } else {
             val terms = query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
             loading.value = true
-            val search = api.search(SearchRequest.gloss(prefs.authToken!!, prefs.language, terms))
-            loading.value = false
+            try {
+                val search = api.search(SearchRequest.gloss(prefs.authToken!!, prefs.language, terms))
+                loading.value = false
 
-            terms.map { term ->
-                val normalized = normalize(term)
-                Pair(term, search.results!!.find { normalized == normalize(it.head) })
+                if (search.success && search.results != null) {
+                    terms.map { term ->
+                        val normalized = normalize(term)
+                        Pair(term, search.results!!.find { normalized == normalize(it.head) })
+                    }
+                } else {
+                    Log.w("gloss", "Failed to gloss: ${search.error}")
+                    listOf()
+                }
+            } catch (t: Throwable) {
+                loading.value = false
+                Log.w("gloss", "Failed to gloss", t)
+                listOf()
             }
         }
     }.flowOn(Dispatchers.IO).stateIn(

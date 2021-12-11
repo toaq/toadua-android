@@ -27,9 +27,13 @@ class ToaduaViewModel(context: Context) : ViewModel() {
 
     fun logOut() {
         viewModelScope.launch {
-            val logout = api.logout(LogoutRequest(prefs.authToken!!))
-            if (!logout.success)
-                Log.w("logOut", "Failed to log out: ${logout.error}")
+            try {
+                val logout = api.logout(LogoutRequest(prefs.authToken!!))
+                if (!logout.success)
+                    Log.w("logOut", "Failed to log out: ${logout.error}")
+            } catch (t: Throwable) {
+                Log.w("logOut", "Failed to log out", t)
+            }
             invalidateSession()
         }
     }

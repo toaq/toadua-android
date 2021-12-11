@@ -64,7 +64,7 @@ class SearchFragment : Fragment() {
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        binding.createButton.visibility = if (activityModel.loggedIn) View.VISIBLE else View.INVISIBLE
+        binding.createButton.visibility = if (activityModel.loggedIn) View.VISIBLE else View.GONE
 
         //new start
         val navigation = binding.mynavigationview
@@ -209,7 +209,7 @@ class SearchFragment : Fragment() {
                         binding.welcomeCard.visibility = if (model.uiResults.value == null) View.VISIBLE else View.GONE
                         binding.noResultsCard.visibility = if (model.uiResults.value?.list?.isEmpty() == true) View.VISIBLE else View.GONE
                         binding.createCard.visibility = View.GONE
-                        binding.createButton.visibility = View.VISIBLE
+                        binding.createButton.visibility = if (activityModel.loggedIn) View.VISIBLE else View.GONE
                     }
                 }
             }

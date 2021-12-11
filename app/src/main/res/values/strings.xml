@@ -4,6 +4,10 @@
     <string name="cont">Continue</string>
     <string name="create_account">Create account</string>
     <string name="use_existing_account">Use existing account</string>
+    <string name="search">Search</string>
+    <string name="gloss">Gloss</string>
+    <string name="switch_language">Switch language</string>
+    <string name="log_out">Log out</string>
     <string name="change_server">Change server</string>
     <string name="skip">Skip for now</string>
     <string name="username">Username</string>
@@ -12,9 +16,8 @@
     <string name="confirm">Confirm</string>
     <string name="jemu">Jemu</string>
     <string name="cant_connect">Can\'t connect to the server</string>
-    <string name="log_out">Log out</string>
     <string name="try_again">Try again</string>
-    <string name="search">Search…</string>
+    <string name="search_hint">Search…</string>
     <string name="menu">Menu</string>
     <string name="language">Language</string>
     <string name="connected_to">Connected to</string>
@@ -46,7 +49,6 @@
     <string name="cancel">Cancel</string>
     <string name="comment_title">Add a comment</string>
     <string name="back">Back</string>
-    <string name="gloss">Gloss</string>
     <string name="gloss_hint">Gloss…</string>
     <string name="missing_gloss">\???</string>
     <string name="nav_open">Open</string>

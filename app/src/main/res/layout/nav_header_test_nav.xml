@@ -23,21 +23,20 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Logged in as "
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#5d5d5d" />
+
     <TextView
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
-        android:text="robintown"
+        android:textColor="#5d5d5d"
         android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="#5d5d5d" />
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/server"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:text="toadoa.uakci.pl"
         android:textColor="#5d5d5d" />
 </LinearLayout>

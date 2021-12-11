@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Toadua"
         android:networkSecurityConfig="@xml/network_security_config">
-        <!-- TODO: remove network security config when done with debugging -->
+        <!-- TODO: remove network security config before releasing -->
 
         <activity
             android:name=".MainActivity"

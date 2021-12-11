@@ -6,11 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.navigation.fragment.findNavController
 import town.robin.toadua.databinding.FragmentAuthBinding
-import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -26,7 +23,6 @@ import town.robin.toadua.api.ToaduaService
 
 class AuthFragment : Fragment() {
     private lateinit var binding: FragmentAuthBinding
-    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private val activityModel: ToaduaViewModel by activityViewModels {
         ToaduaViewModel.Factory(requireContext())
     }
@@ -96,37 +92,6 @@ class AuthFragment : Fragment() {
             findNavController().navigate(R.id.auth_to_search)
         }
 
-
-        //new start
-        val navigation = binding.mynavigationview
-        navigation.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_language->                 // Handle menu click
-                    true
-                R.id.nav_glosser ->    {             // Handle settings click
-                    findNavController().apply {
-                        //item.setTitle("Search")
-                        popBackStack()
-                        navigate(R.id.gloss_fragment)
-                    }
-                    true}
-                R.id.nav_search ->    {             // Handle settings click
-                    findNavController().apply {
-                        //getActivity()?.setTitle("Search")
-                        popBackStack()
-                        navigate(R.id.search_fragment)
-                    }
-                    true}
-
-                R.id.nav_logout ->                 // Handle logout click
-                    true
-
-                else -> false
-            }
-        }
-//new end
-
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.loading.collect {
@@ -149,23 +114,6 @@ class AuthFragment : Fragment() {
 
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setHasOptionsMenu(true)
-        val drawerLayout = binding.myDrawerLayout
-        actionBarDrawerToggle =
-            ActionBarDrawerToggle(activity, drawerLayout, R.string.nav_open , R.string.nav_close)
-
-        drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
-
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        actionBarDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
 
     private fun focusInput(view: View) {
         view.requestFocus()

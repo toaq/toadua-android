@@ -201,6 +201,8 @@ class SearchFragment : Fragment() {
                         binding.createCard.visibility = View.VISIBLE
                         binding.createButton.visibility = View.GONE
                         binding.searchInput.text.clear()
+                        binding.userInput.text.clear()
+                        binding.sortSpinner.setSelection(0)
                         focusInput(binding.createTermInput)
                     } else {
                         binding.results.visibility = View.VISIBLE

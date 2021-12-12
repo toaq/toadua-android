@@ -65,8 +65,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.loggedIn.collect {
-                    binding.navDrawer.menu.findItem(R.id.nav_sign_in).isVisible = !it
                     binding.navDrawer.menu.findItem(R.id.nav_log_out).isVisible = it
+                    binding.navDrawer.menu.findItem(R.id.nav_sign_in).isVisible = !it
                 }
             }
         }
@@ -125,6 +125,13 @@ class MainActivity : AppCompatActivity() {
                     navController.popBackStack()
                     navController.navigate(R.id.auth_fragment)
                     closeNavDrawer()
+                    true
+                }
+                R.id.nav_credits -> {
+                    AlertDialog.Builder(this)
+                        .setTitle(R.string.credits)
+                        .setMessage(R.string.credits_text)
+                        .show()
                     true
                 }
                 else -> false

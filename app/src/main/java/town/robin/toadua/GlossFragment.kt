@@ -26,6 +26,12 @@ import town.robin.toadua.databinding.GlossCardBinding
 @FlowPreview
 @ExperimentalCoroutinesApi
 class GlossFragment : Fragment() {
+    companion object {
+        const val PARAM_QUERY = "query"
+        private const val UI_BLANK = '◌'
+        private const val API_BLANK = '▯'
+    }
+
     private lateinit var binding: FragmentGlossBinding
     private val activityModel: ToaduaViewModel by activityViewModels {
         ToaduaViewModel.Factory(requireContext())
@@ -82,7 +88,7 @@ class GlossFragment : Fragment() {
             }
         }
 
-        arguments?.getString("query")?.let {
+        arguments?.getString(PARAM_QUERY)?.let {
             binding.glossInput.setText(it)
         }
 
@@ -101,7 +107,7 @@ class GlossFragment : Fragment() {
             val (term, entry) = results[position]
 
             holder.binding.glossTerm.text = term
-            holder.binding.glossDefinition.text = entry?.body ?: getString(R.string.missing_gloss)
+            holder.binding.glossDefinition.text = entry?.body?.replace(API_BLANK, UI_BLANK) ?: getString(R.string.missing_gloss)
         }
     }
 }

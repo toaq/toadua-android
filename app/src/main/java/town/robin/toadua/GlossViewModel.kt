@@ -18,13 +18,17 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
         override fun <T : ViewModel> create(modelClass: Class<T>): T = GlossViewModel(api, prefs) as T
     }
 
+    companion object {
+        const val GLOSS_RATE_LIMIT: Long = 500
+    }
+
     val query = MutableStateFlow("")
     val loading = MutableStateFlow(false)
     private val _errors = Channel<Pair<ErrorType, String?>>(Channel.RENDEZVOUS)
     val errors = _errors.receiveAsFlow()
 
     @FlowPreview @ExperimentalCoroutinesApi
-    val results = query.debounce(500).mapLatest { query ->
+    val results = query.debounce(GLOSS_RATE_LIMIT).mapLatest { query ->
         if (query.isBlank()) {
             null
         } else {

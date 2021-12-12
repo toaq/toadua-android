@@ -21,6 +21,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class AuthFragment : Fragment() {
+    companion object {
+        private const val ALERT_DIALOG_DELAY: Long = 200
+    }
+
     private lateinit var binding: FragmentAuthBinding
     private val activityModel: ToaduaViewModel by activityViewModels {
         ToaduaViewModel.Factory(requireContext())
@@ -79,7 +83,7 @@ class AuthFragment : Fragment() {
                 .setNegativeButton(R.string.cancel) { _, _ -> }
                 .show()
 
-            input.postDelayed({ focusInput(input) },200)
+            input.postDelayed({ focusInput(input) }, ALERT_DIALOG_DELAY)
         }
         binding.skipButton.setOnClickListener {
             findNavController().navigate(R.id.auth_to_search)

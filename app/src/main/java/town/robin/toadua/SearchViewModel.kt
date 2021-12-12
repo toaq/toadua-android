@@ -16,6 +16,10 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
         override fun <T : ViewModel> create(modelClass: Class<T>): T = SearchViewModel(api, prefs) as T
     }
 
+    companion object {
+        private const val SEARCH_RATE_LIMIT: Long = 250
+    }
+
     val query = MutableStateFlow("")
     val userFilter = MutableStateFlow("")
     val sortOrder = MutableStateFlow<SortOrder?>(null)
@@ -28,7 +32,7 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
     @FlowPreview @ExperimentalCoroutinesApi
     val results = combine(query, userFilter, sortOrder) { query, userFilter, sortOrder ->
         Triple(query, userFilter, sortOrder)
-    }.debounce(250).mapLatest { (query, userFilter, sortOrder) ->
+    }.debounce(SEARCH_RATE_LIMIT).mapLatest { (query, userFilter, sortOrder) ->
         if (createMode.value && (query.isNotEmpty() || userFilter.isNotEmpty()))
             createMode.value = false
 

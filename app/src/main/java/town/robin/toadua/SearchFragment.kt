@@ -37,6 +37,13 @@ import kotlin.math.min
 @FlowPreview
 @ExperimentalCoroutinesApi
 class SearchFragment : Fragment() {
+    companion object {
+        private const val UI_BLANK = '◌'
+        private const val API_BLANK = '▯'
+        private const val OFFICIAL_USER = "official"
+        private const val ALERT_DIALOG_DELAY: Long = 200
+        private const val TRANSITION_LENGTH: Long = 150
+    }
     private lateinit var binding: FragmentSearchBinding
     private val activityModel: ToaduaViewModel by activityViewModels {
         ToaduaViewModel.Factory(requireContext())
@@ -72,7 +79,7 @@ class SearchFragment : Fragment() {
             binding.searchInput.text.clear()
         }
         binding.filterButton.setOnClickListener {
-            TransitionManager.beginDelayedTransition(binding.navBar, ChangeBounds().apply { duration = 150 })
+            TransitionManager.beginDelayedTransition(binding.navBar, ChangeBounds().apply { duration = TRANSITION_LENGTH })
             binding.filters.visibility = when (binding.filters.visibility) {
                 View.VISIBLE -> View.GONE
                 else -> View.VISIBLE
@@ -109,7 +116,7 @@ class SearchFragment : Fragment() {
             if (binding.createDefinitionInput.isFocused) {
                 val start = max(binding.createDefinitionInput.selectionStart, 0)
                 val end = max(binding.createDefinitionInput.selectionEnd, 0)
-                binding.createDefinitionInput.text.replace(min(start, end), max(start, end), "◌")
+                binding.createDefinitionInput.text.replace(min(start, end), max(start, end), UI_BLANK.toString())
             }
         }
         binding.cancelButton.setOnClickListener {
@@ -118,7 +125,7 @@ class SearchFragment : Fragment() {
         binding.submitButton.setOnClickListener {
             model.createEntry(
                 binding.createTermInput.text.toString(),
-                binding.createDefinitionInput.text.toString().replace('◌', '▯')
+                binding.createDefinitionInput.text.toString().replace(UI_BLANK, API_BLANK)
             )
         }
 
@@ -165,7 +172,6 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.results.collect { results ->
                     model.uiResults.value = results?.let { LiveList(it, null, UpdateAction.ADD) }
-                    // TODO: cancel any pending actions
                 }
             }
         }
@@ -221,7 +227,7 @@ class SearchFragment : Fragment() {
             val entry = results[position]
             holder.binding.apply {
                 head.text = entry.head
-                body.text = entry.body.replace('▯', '◌')
+                body.text = entry.body.replace(API_BLANK, UI_BLANK)
                 author.text = entry.user
                 score.text = if (entry.score > 0) "+${entry.score}" else if (entry.score < 0) "${entry.score}" else ""
 
@@ -235,7 +241,7 @@ class SearchFragment : Fragment() {
                 delete.visibility = if (entry.user == activityModel.prefs.username.value) View.VISIBLE else View.INVISIBLE
 
                 // TODO: do this the non-deprecated way
-                val color = resources.getColor(if (entry.user == "official") R.color.pink else R.color.blue)
+                val color = resources.getColor(if (entry.user == OFFICIAL_USER) R.color.pink else R.color.blue)
                 author.setTextColor(color)
                 entryControls.setBackgroundColor(color)
 
@@ -277,7 +283,7 @@ class SearchFragment : Fragment() {
                             }
                         }
 
-                    input.postDelayed({ focusInput(input) },200)
+                    input.postDelayed({ focusInput(input) }, ALERT_DIALOG_DELAY)
                 }
                 copy.setOnClickListener {
                     binding.createTermInput.setText(entry.head)
@@ -297,7 +303,7 @@ class SearchFragment : Fragment() {
 
             selected.observe(viewLifecycleOwner) {
                 val thisSelected = it == holder.adapterPosition
-                TransitionManager.beginDelayedTransition(holder.binding.root, ChangeBounds().apply { duration = 150 })
+                TransitionManager.beginDelayedTransition(holder.binding.root, ChangeBounds().apply { duration = TRANSITION_LENGTH })
                 holder.binding.entryControls.visibility = if (thisSelected && activityModel.loggedIn.value) View.VISIBLE else View.GONE
                 holder.binding.comments.visibility = if (thisSelected && entry.notes.isNotEmpty()) View.VISIBLE else View.GONE
             }

@@ -19,7 +19,11 @@ class ToaduaViewModel(context: Context) : ViewModel() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T = ToaduaViewModel(context) as T
     }
 
-    val prefs = ToaduaPrefs(viewModelScope, context.getSharedPreferences("prefs", Context.MODE_PRIVATE))
+    companion object {
+        private const val PREFS = "prefs"
+    }
+
+    val prefs = ToaduaPrefs(viewModelScope, context.getSharedPreferences(PREFS, Context.MODE_PRIVATE))
     val api = prefs.server.map { ToaduaService.create(it) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

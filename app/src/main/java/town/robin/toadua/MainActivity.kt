@@ -19,16 +19,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import town.robin.toadua.api.WelcomeRequest
 import town.robin.toadua.databinding.ActivityMainBinding
 import town.robin.toadua.databinding.NavHeaderBinding
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val ALERT_DIALOG_DELAY: Long = 200
+    }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHeaderBinding: NavHeaderBinding
     private lateinit var navController: NavController
@@ -117,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                    input.postDelayed({ focusInput(input) },200)
+                    input.postDelayed({ focusInput(input) }, ALERT_DIALOG_DELAY)
                     true
                 }
                 R.id.nav_log_out -> {
@@ -165,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             val glossQuery = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
             if (glossQuery != null) {
                 navController.popBackStack()
-                navController.navigate(R.id.gloss_fragment, bundleOf("query" to glossQuery))
+                navController.navigate(R.id.gloss_fragment, bundleOf(GlossFragment.PARAM_QUERY to glossQuery))
             }
             else {
                 navController.popBackStack()

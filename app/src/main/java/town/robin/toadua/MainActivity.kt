@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.loggedIn.collect {
                     binding.navDrawer.menu.findItem(R.id.nav_log_out).isVisible = it

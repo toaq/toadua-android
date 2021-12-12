@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_search"
+                    android:icon="@drawable/ic_search"
+                    android:title="@string/search" />
+                <item
+                    android:id="@+id/nav_glosser"
+                    android:icon="@drawable/ic_book"
+                    android:title="@string/gloss" />
+        </group>
+
+        <group android:id="@+id/nav_footer">
+                <item
+                    android:id="@+id/nav_language"
+                    android:icon="@drawable/ic_language"
+                    android:title="@string/switch_language" />
+                <item
+                    android:id="@+id/nav_log_out"
+                    android:icon="@drawable/ic_log_out"
+                    android:title="@string/log_out" />
+                <item
+                    android:id="@+id/nav_sign_in"
+                    android:icon="@drawable/ic_sign_in"
+                    android:title="@string/sign_in" />
+        </group>
+</menu>

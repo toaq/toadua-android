@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.*
 
-class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModel() {
-    class Factory(private val api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModelProvider.Factory {
+class SearchViewModel(private val api: StateFlow<ToaduaService>, private val prefs: ToaduaPrefs) : ViewModel() {
+    class Factory(private val api: StateFlow<ToaduaService>, private val prefs: ToaduaPrefs) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T = SearchViewModel(api, prefs) as T
     }
 
@@ -34,10 +34,10 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
         } else {
             loading.value = true
             try {
-                val search = api.search(
+                val search = api.value.search(
                     SearchRequest.search(
-                        prefs.authToken,
-                        prefs.language,
+                        prefs.authToken.value,
+                        prefs.language.value,
                         query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() },
                         if (userFilter.isBlank()) null else userFilter,
                         sortOrder,
@@ -64,7 +64,9 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
         viewModelScope.launch {
             loading.value = true
             try {
-                val create = api.create(CreateRequest(prefs.authToken!!, term, definition, prefs.language))
+                val create = api.value.create(CreateRequest(
+                    prefs.authToken.value!!, term, definition, prefs.language.value,
+                ))
                 if (create.success && create.entry != null) {
                     uiResults.value = LiveList(mutableListOf(create.entry), null, UpdateAction.ADD)
                 } else {
@@ -83,7 +85,7 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
             val list = uiResults.value!!.list
             val entry = list[index]
             try {
-                val response = api.vote(VoteRequest(prefs.authToken!!, entry.id, vote))
+                val response = api.value.vote(VoteRequest(prefs.authToken.value!!, entry.id, vote))
                 if (response.success) {
                     entry.score += vote - entry.vote!!
                     entry.vote = vote
@@ -103,9 +105,9 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
             val entry = list[index]
             loading.value = true
             try {
-                val note = api.note(NoteRequest(prefs.authToken!!, entry.id, comment))
+                val note = api.value.note(NoteRequest(prefs.authToken.value!!, entry.id, comment))
                 if (note.success) {
-                    entry.notes.add(Note("", prefs.username!!, comment))
+                    entry.notes.add(Note("", prefs.username.value!!, comment))
                     uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
                 } else {
                     Log.w("commentOnEntry", "Failed to comment on entry: ${note.error}")
@@ -122,7 +124,7 @@ class SearchViewModel(private val api: ToaduaService, private val prefs: ToaduaP
             val list = uiResults.value!!.list
             loading.value = true
             try {
-                val remove = api.remove(RemoveRequest(prefs.authToken!!, list[index].id))
+                val remove = api.value.remove(RemoveRequest(prefs.authToken.value!!, list[index].id))
                 if (remove.success) {
                     uiResults.value = LiveList(list.apply { removeAt(index) }, index, UpdateAction.REMOVE)
                 } else {

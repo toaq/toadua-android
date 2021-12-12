@@ -1,24 +1,32 @@
 package town.robin.toadua
 
 import android.content.SharedPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlin.reflect.KProperty
 
-class StringPref(private val key: String, private val default: String, private val prefs: SharedPreferences) {
-    operator fun getValue(thisRef: Any, property: KProperty<*>): String = prefs.getString(key, default)!!
-    operator fun setValue(thisRef: Any, property: KProperty<*>, value: String) = prefs.edit().putString(key, value).apply()
+class StringPref(scope: CoroutineScope, key: String, default: String, prefs: SharedPreferences) {
+    private val flow = MutableStateFlow(prefs.getString(key, default)!!).apply {
+        scope.launch { collect { prefs.edit().putString(key, it).apply() } }
+    }
+    operator fun getValue(thisRef: Any, property: KProperty<*>): MutableStateFlow<String> = flow
 }
 
-class NullableStringPref(private val key: String, private val prefs: SharedPreferences) {
-    operator fun getValue(thisRef: Any, property: KProperty<*>): String? = prefs.getString(key, null)
-    operator fun setValue(thisRef: Any, property: KProperty<*>, value: String?) = prefs.edit().putString(key, value).apply()
+class NullableStringPref(scope: CoroutineScope, key: String, default: String?, prefs: SharedPreferences) {
+    private val flow = MutableStateFlow(prefs.getString(key, default)).apply {
+        scope.launch { collect { prefs.edit().putString(key, it).apply() } }
+    }
+    operator fun getValue(thisRef: Any, property: KProperty<*>): MutableStateFlow<String?> = flow
 }
 
-fun SharedPreferences.string(key: String, default: String) = StringPref(key, default, this)
-fun SharedPreferences.nullableString(key: String) = NullableStringPref(key, this)
+fun SharedPreferences.string(scope: CoroutineScope, key: String, default: String) = StringPref(scope, key, default, this)
+fun SharedPreferences.nullableString(scope: CoroutineScope, key: String, default: String?) = NullableStringPref(scope, key, default, this)
 
-class ToaduaPrefs(prefs: SharedPreferences) {
-    var server: String by prefs.string("server", "https://toadua.uakci.pl/")
-    var authToken: String? by prefs.nullableString("auth_token")
-    var language: String by prefs.string("language", "en")
-    var username: String? by prefs.nullableString("username")
+class ToaduaPrefs(scope: CoroutineScope, prefs: SharedPreferences) {
+    val server by prefs.string(scope, "server", "https://toadua.uakci.pl/")
+    val authToken by prefs.nullableString(scope, "auth_token", null)
+    val language by prefs.string(scope, "language", "en")
+    val username by prefs.nullableString(scope, "username", null)
 }

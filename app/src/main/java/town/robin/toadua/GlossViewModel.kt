@@ -12,8 +12,8 @@ import town.robin.toadua.api.SearchRequest
 import town.robin.toadua.api.ToaduaService
 import java.text.Normalizer
 
-class GlossViewModel(private val api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModel() {
-    class Factory(private val api: ToaduaService, private val prefs: ToaduaPrefs) : ViewModelProvider.Factory {
+class GlossViewModel(private val api: StateFlow<ToaduaService>, private val prefs: ToaduaPrefs) : ViewModel() {
+    class Factory(private val api: StateFlow<ToaduaService>, private val prefs: ToaduaPrefs) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T = GlossViewModel(api, prefs) as T
     }
 
@@ -28,13 +28,15 @@ class GlossViewModel(private val api: ToaduaService, private val prefs: ToaduaPr
             val terms = query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
             loading.value = true
             try {
-                val search = api.search(SearchRequest.gloss(prefs.authToken!!, prefs.language, terms))
+                val search = api.value.search(SearchRequest.gloss(
+                    prefs.authToken.value!!, prefs.language.value, terms
+                ))
                 loading.value = false
 
                 if (search.success && search.results != null) {
                     terms.map { term ->
                         val normalized = normalize(term)
-                        Pair(term, search.results!!.find { normalized == normalize(it.head) })
+                        Pair(term, search.results.find { normalized == normalize(it.head) })
                     }
                 } else {
                     Log.w("gloss", "Failed to gloss: ${search.error}")

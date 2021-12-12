@@ -16,7 +16,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.ChangeBounds
@@ -29,16 +28,14 @@ import town.robin.toadua.api.SortOrder
 import town.robin.toadua.databinding.CommentBinding
 import town.robin.toadua.databinding.FragmentSearchBinding
 import town.robin.toadua.databinding.EntryCardBinding
-import android.view.Gravity
 import android.widget.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
-
-import com.google.android.material.internal.NavigationMenu
-
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
-    private lateinit var binding2: NavigationMenu
     private val activityModel: ToaduaViewModel by activityViewModels {
         ToaduaViewModel.Factory(requireContext())
     }
@@ -64,82 +61,11 @@ class SearchFragment : Fragment() {
         ).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        binding.createButton.visibility = if (activityModel.loggedIn) View.VISIBLE else View.GONE
+        binding.createButton.visibility = if (activityModel.loggedIn.value) View.VISIBLE else View.GONE
 
-        //new start
-        val navigation = binding.mynavigationview
-        val header = navigation.getHeaderView(0)
-        if (activityModel.loggedIn) {
-            header.findViewById<TextView>(R.id.auth_status).setText(R.string.logged_in_as)
-            header.findViewById<TextView>(R.id.username).text = activityModel.prefs.username
-        } else {
-            header.findViewById<TextView>(R.id.auth_status).setText(R.string.connected_to)
-            header.findViewById<TextView>(R.id.username).visibility = View.GONE
+        binding.menuButton.setOnClickListener {
+            (requireActivity() as MainActivity).openNavDrawer()
         }
-        header.findViewById<TextView>(R.id.server).text = activityModel.serverName
-        navigation.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-
-                R.id.nav_language-> {                // Handle menu click
-                    val input = EditText(requireContext()).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                        ).apply {
-                            setText(activityModel.prefs.language)
-                            val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
-                            marginStart = margin
-                            marginEnd = margin
-                        }
-                    }
-                    AlertDialog.Builder(requireContext())
-                        .setTitle(R.string.language)
-                        .setView(FrameLayout(requireContext()).apply { addView(input) })
-                        .setPositiveButton(R.string.confirm) { _, _ ->
-                            activityModel.prefs.language = input.text.toString()
-                        }
-                        .setNegativeButton(R.string.cancel) { _, _ -> }
-                        .show().apply {
-                            val button = getButton(AlertDialog.BUTTON_POSITIVE)
-                            input.doOnTextChanged { text, _, _, _ ->
-                                button.isEnabled = text?.isNotBlank() ?: false
-                            }
-                        }
-
-                    input.postDelayed({ focusInput(input) },200)
-                    true}
-                R.id.nav_glosser ->    {             // Handle settings click
-                    findNavController().apply {
-                        //getActivity()?.setTitle("Search")
-                        popBackStack()
-                        navigate(R.id.gloss_fragment)
-                    }
-                    true}
-                R.id.nav_search ->    {             // Handle settings click
-                    findNavController().apply {
-                        //getActivity()?.setTitle("Search")
-                        popBackStack()
-                        navigate(R.id.search_fragment)
-                    }
-                    true}
-                R.id.nav_logout -> {                // Handle logout click
-                    activityModel.logOut()
-                    findNavController().navigate(R.id.auth_fragment)
-                    true}
-
-                else -> false
-            }
-        }
-        //new end
-        binding.menuButton.setOnClickListener(View.OnClickListener {
-            val navDrawer = binding.myDrawerLayout
-            // If the navigation drawer is not open then open it, if its already open then close it.
-            if (!navDrawer.isDrawerOpen(Gravity.START)) navDrawer.openDrawer(Gravity.START) else navDrawer.closeDrawer(
-                Gravity.END
-            )
-        })
-
-
         binding.clearButton.setOnClickListener {
             binding.searchInput.text.clear()
         }
@@ -209,7 +135,7 @@ class SearchFragment : Fragment() {
                         binding.welcomeCard.visibility = if (model.uiResults.value == null) View.VISIBLE else View.GONE
                         binding.noResultsCard.visibility = if (model.uiResults.value?.list?.isEmpty() == true) View.VISIBLE else View.GONE
                         binding.createCard.visibility = View.GONE
-                        binding.createButton.visibility = if (activityModel.loggedIn) View.VISIBLE else View.GONE
+                        binding.createButton.visibility = if (activityModel.loggedIn.value) View.VISIBLE else View.GONE
                     }
                 }
             }
@@ -285,7 +211,7 @@ class SearchFragment : Fragment() {
 
                 like.setImageResource(if (entry.vote == 1) R.drawable.ic_like_active else R.drawable.ic_like_inactive)
                 dislike.setImageResource(if (entry.vote == -1) R.drawable.ic_dislike_active else R.drawable.ic_dislike_inactive)
-                delete.visibility = if (entry.user == activityModel.prefs.username) View.VISIBLE else View.INVISIBLE
+                delete.visibility = if (entry.user == activityModel.prefs.username.value) View.VISIBLE else View.INVISIBLE
 
                 // TODO: do this the non-deprecated way
                 val color = resources.getColor(if (entry.user == "official") R.color.pink else R.color.blue)
@@ -351,7 +277,7 @@ class SearchFragment : Fragment() {
             selected.observe(viewLifecycleOwner) {
                 val thisSelected = it == holder.adapterPosition
                 TransitionManager.beginDelayedTransition(holder.binding.root, ChangeBounds().apply { duration = 150 })
-                holder.binding.entryControls.visibility = if (thisSelected && activityModel.loggedIn) View.VISIBLE else View.GONE
+                holder.binding.entryControls.visibility = if (thisSelected && activityModel.loggedIn.value) View.VISIBLE else View.GONE
                 holder.binding.comments.visibility = if (thisSelected && entry.notes.isNotEmpty()) View.VISIBLE else View.GONE
             }
         }

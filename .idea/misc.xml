@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../layout/custom_preview.xml" value="0.19010416666666666" />
         <entry key="app/src/main/res/drawable/ic_filter.xml" value="0.35989583333333336" />
         <entry key="app/src/main/res/drawable/ic_like_inactive.xml" value="0.3734375" />
         <entry key="app/src/main/res/drawable/ic_menu.xml" value="0.35989583333333336" />
@@ -15,9 +16,11 @@
         <entry key="app/src/main/res/layout/fragment_gloss.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.33" />
         <entry key="app/src/main/res/layout/gloss_card.xml" value="0.3572916666666667" />
+        <entry key="app/src/main/res/layout/nav_header.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/layout/nav_header_test_nav.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/layout/search_card.xml" value="0.33" />
         <entry key="app/src/main/res/layout/spinner_item.xml" value="0.17375886524822695" />
+        <entry key="app/src/main/res/menu/nav_menu.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/menu/navigation_menu.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/xml/network_security_config.xml" value="0.190625" />
       </map>

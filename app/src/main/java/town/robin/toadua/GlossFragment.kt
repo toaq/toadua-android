@@ -1,33 +1,29 @@
 package town.robin.toadua
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.Entry
 import town.robin.toadua.databinding.FragmentGlossBinding
 import town.robin.toadua.databinding.GlossCardBinding
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class GlossFragment : Fragment() {
     private lateinit var binding: FragmentGlossBinding
     private val activityModel: ToaduaViewModel by activityViewModels {
@@ -50,80 +46,9 @@ class GlossFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        //new start
-        val navigation = binding.mynavigationview
-        val header = navigation.getHeaderView(0)
-        if (activityModel.loggedIn) {
-            header.findViewById<TextView>(R.id.auth_status).setText(R.string.logged_in_as)
-            header.findViewById<TextView>(R.id.username).text = activityModel.prefs.username
-        } else {
-            header.findViewById<TextView>(R.id.auth_status).setText(R.string.connected_to)
-            header.findViewById<TextView>(R.id.username).visibility = View.GONE
+        binding.menuButton.setOnClickListener {
+            (requireActivity() as MainActivity).openNavDrawer()
         }
-        header.findViewById<TextView>(R.id.server).text = activityModel.serverName
-        navigation.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-
-                R.id.nav_language-> {                // Handle menu click
-                    val input = EditText(requireContext()).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                        ).apply {
-                            setText(activityModel.prefs.language)
-                            val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
-                            marginStart = margin
-                            marginEnd = margin
-                        }
-                    }
-                    AlertDialog.Builder(requireContext())
-                        .setTitle(R.string.language)
-                        .setView(FrameLayout(requireContext()).apply { addView(input) })
-                        .setPositiveButton(R.string.confirm) { _, _ ->
-                            activityModel.prefs.language = input.text.toString()
-                        }
-                        .setNegativeButton(R.string.cancel) { _, _ -> }
-                        .show().apply {
-                            val button = getButton(AlertDialog.BUTTON_POSITIVE)
-                            input.doOnTextChanged { text, _, _, _ ->
-                                button.isEnabled = text?.isNotBlank() ?: false
-                            }
-                        }
-
-                    input.postDelayed({ focusInput(input) },200)
-                    true}
-                R.id.nav_glosser ->    {             // Handle settings click
-                    findNavController().apply {
-                        //item.setTitle("Search")
-                        popBackStack()
-                        navigate(R.id.gloss_fragment)
-                    }
-                    true}
-                R.id.nav_search ->    {             // Handle settings click
-                    findNavController().apply {
-                        //getActivity()?.setTitle("Search")
-                        popBackStack()
-                        navigate(R.id.search_fragment)
-                    }
-                    true}
-                R.id.nav_logout -> {                // Handle logout click
-                    activityModel.logOut()
-                    findNavController().navigate(R.id.auth_fragment)
-                    true}
-
-                else -> false
-            }
-        }
-        //new end
-
-
-        binding.menuButton.setOnClickListener(View.OnClickListener {
-            val navDrawer = binding.myDrawerLayout
-            // If the navigation drawer is not open then open it, if its already open then close it.
-            if (!navDrawer.isDrawerOpen(Gravity.START)) navDrawer.openDrawer(Gravity.START) else navDrawer.closeDrawer(
-                Gravity.END
-            )
-        })
 
         binding.glossInput.doOnTextChanged { text, _, _, _ ->
             model.query.value = text?.toString() ?: ""
@@ -168,11 +93,5 @@ class GlossFragment : Fragment() {
             holder.binding.glossTerm.text = term
             holder.binding.glossDefinition.text = entry?.body ?: getString(R.string.missing_gloss)
         }
-    }
-
-    private fun focusInput(view: View) {
-        view.requestFocus()
-        (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-            .showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 }

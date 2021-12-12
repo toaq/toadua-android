@@ -19,7 +19,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import town.robin.toadua.api.ToaduaService
 
 class AuthFragment : Fragment() {
     private lateinit var binding: FragmentAuthBinding
@@ -38,8 +37,6 @@ class AuthFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentAuthBinding.inflate(inflater, container, false)
-
-        binding.authServer.text = activityModel.serverName
 
         binding.continueButton.setOnClickListener {
             when (authType) {
@@ -63,7 +60,7 @@ class AuthFragment : Fragment() {
         }
         binding.changeServerButton.setOnClickListener {
             val input = EditText(requireContext()).apply {
-                setText(activityModel.prefs.server)
+                setText(activityModel.prefs.server.value)
                 layoutParams = FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -77,11 +74,7 @@ class AuthFragment : Fragment() {
                 .setTitle(R.string.server_address)
                 .setView(FrameLayout(requireContext()).apply { addView(input) })
                 .setPositiveButton(R.string.confirm) { _, _ ->
-                    val server = input.text.toString()
-                    activityModel.prefs.server = server
-                    binding.authServer.text = activityModel.serverName
-                    activityModel.api = ToaduaService.create(server)
-                    model.api = activityModel.api
+                    activityModel.prefs.server.value = input.text.toString()
                 }
                 .setNegativeButton(R.string.cancel) { _, _ -> }
                 .show()
@@ -106,7 +99,14 @@ class AuthFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                model.loggedIn.collect {
+                activityModel.serverName.collect {
+                    binding.authServer.text = it
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                activityModel.loggedIn.collect {
                     if (it) findNavController().navigate(R.id.auth_to_search)
                 }
             }

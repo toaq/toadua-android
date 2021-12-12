@@ -210,7 +210,7 @@ class SearchFragment : Fragment() {
     private inner class ResultsAdapter(var results: List<Entry>) : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
         inner class ViewHolder(val binding: EntryCardBinding) : RecyclerView.ViewHolder(binding.root)
 
-        val selected = MutableLiveData<Int?>() // TODO: move to vm
+        val selected = MutableLiveData<Int?>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
             ViewHolder(EntryCardBinding.inflate(LayoutInflater.from(parent.context), parent, false))

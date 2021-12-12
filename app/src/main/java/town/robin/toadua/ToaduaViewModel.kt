@@ -15,6 +15,7 @@ import java.net.URI
 
 class ToaduaViewModel(context: Context) : ViewModel() {
     class Factory(private val context: Context) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T = ToaduaViewModel(context) as T
     }
 

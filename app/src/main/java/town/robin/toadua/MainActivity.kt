@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_sign_in -> {
+                    model.prefs.skipAuth.value = false
                     navController.popBackStack()
                     navController.navigate(R.id.auth_fragment)
                     closeNavDrawer()
@@ -179,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.gloss_fragment,
                     bundleOf(GlossFragment.PARAM_QUERY to glossQuery)
                 )
-            } else if (model.loggedIn.value) {
+            } else if (model.prefs.skipAuth.value) {
                 navController.popBackStack()
                 navController.navigate(R.id.search_fragment)
             }

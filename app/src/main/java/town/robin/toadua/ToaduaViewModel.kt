@@ -43,6 +43,7 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     fun invalidateSession() {
         prefs.authToken.value = null
         prefs.username.value = null
+        prefs.skipAuth.value = false
     }
 
     fun logOut() {

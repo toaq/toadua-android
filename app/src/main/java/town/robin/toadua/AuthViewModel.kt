@@ -30,6 +30,7 @@ class AuthViewModel(val api: StateFlow<ToaduaService>, private val prefs: Toadua
                 if (login.success && login.token != null) {
                     prefs.authToken.value = login.token
                     prefs.username.value = username
+                    prefs.skipAuth.value = true
                 } else {
                     loading.value = false
                     _errors.send(Pair(ErrorType.SIGN_IN, login.error))
@@ -49,6 +50,7 @@ class AuthViewModel(val api: StateFlow<ToaduaService>, private val prefs: Toadua
                 if (register.success && register.token != null) {
                     prefs.authToken.value = register.token
                     prefs.username.value = username
+                    prefs.skipAuth.value = true
                 } else {
                     loading.value = false
                     _errors.send(Pair(ErrorType.CREATE_ACCOUNT, register.error))

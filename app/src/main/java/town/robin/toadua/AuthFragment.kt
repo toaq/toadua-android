@@ -87,6 +87,7 @@ class AuthFragment : Fragment() {
         }
         binding.skipButton.setOnClickListener {
             findNavController().navigate(R.id.auth_to_search)
+            activityModel.prefs.skipAuth.value = true
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

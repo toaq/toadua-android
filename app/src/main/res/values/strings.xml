@@ -46,6 +46,8 @@
     <string name="delete">Delete</string>
     <string name="confirm_delete">Are you sure you want to delete entry \'%s\'?</string>
     <string name="create_entry">Create entry</string>
+    <string name="blank">◌</string>
+    <string name="insert_blank">Insert blank</string>
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
     <string name="comment_title">Add a comment</string>

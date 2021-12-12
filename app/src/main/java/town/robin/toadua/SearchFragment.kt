@@ -31,6 +31,8 @@ import town.robin.toadua.databinding.EntryCardBinding
 import android.widget.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlin.math.max
+import kotlin.math.min
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -103,11 +105,21 @@ class SearchFragment : Fragment() {
             binding.createDefinitionInput.text.clear()
             model.createMode.value = true
         }
+        binding.insertBlankButton.setOnClickListener {
+            if (binding.createDefinitionInput.isFocused) {
+                val start = max(binding.createDefinitionInput.selectionStart, 0)
+                val end = max(binding.createDefinitionInput.selectionEnd, 0)
+                binding.createDefinitionInput.text.replace(min(start, end), max(start, end), "◌")
+            }
+        }
         binding.cancelButton.setOnClickListener {
             model.createMode.value = false
         }
         binding.submitButton.setOnClickListener {
-            model.createEntry(binding.createTermInput.text.toString(), binding.createDefinitionInput.text.toString())
+            model.createEntry(
+                binding.createTermInput.text.toString(),
+                binding.createDefinitionInput.text.toString().replace('◌', '▯')
+            )
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

@@ -70,6 +70,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Keep the API flow alive so it reacts to server changes
+                model.api.collect { }
+            }
+        }
 
         binding.navDrawer.setNavigationItemSelectedListener {
             when (it.itemId) {

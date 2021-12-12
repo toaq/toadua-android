@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -58,6 +59,15 @@ class GlossFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.loading.collect {
                     binding.loadingIndicator.visibility = if (it) View.VISIBLE else View.INVISIBLE
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.errors.collect { (type, message) ->
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(getString(type.string, message ?: getString(R.string.cant_connect)))
+                        .show()
                 }
             }
         }

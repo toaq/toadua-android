@@ -154,6 +154,15 @@ class SearchFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.errors.collect { (type, message) ->
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(getString(type.string, message ?: getString(R.string.cant_connect)))
+                        .show()
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.results.collect { results ->
                     model.uiResults.value = results?.let { LiveList(it, null, UpdateAction.ADD) }
                     // TODO: cancel any pending actions

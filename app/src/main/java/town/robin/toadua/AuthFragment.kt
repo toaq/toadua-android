@@ -99,6 +99,15 @@ class AuthFragment : Fragment() {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.errors.collect { (type, message) ->
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(getString(type.string, message ?: getString(R.string.cant_connect)))
+                        .show()
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 activityModel.serverName.collect {
                     binding.authServer.text = it
                 }

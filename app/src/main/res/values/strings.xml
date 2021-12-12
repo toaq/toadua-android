@@ -55,4 +55,11 @@
     <string name="gloss_hint">Gloss…</string>
     <string name="missing_gloss">\???</string>
     <string name="credits_text">Toadua Android, by Robin Townsend (Sẻoqrea) and Dana Altarace\n\nJemu artwork by Özlem Dalyan</string>
+    <string name="sign_in_error">Failed to sign in: %s</string>
+    <string name="create_account_error">Failed to create account: %s</string>
+    <string name="search_error">Failed to search: %s</string>
+    <string name="create_error">Failed to create entry: %s</string>
+    <string name="delete_error">Failed to delete entry: %s</string>
+    <string name="vote_error">Failed to vote on entry: %s</string>
+    <string name="comment_error">Failed to comment on entry: %s</string>
 </resources>

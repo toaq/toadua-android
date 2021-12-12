@@ -1,11 +1,11 @@
 package town.robin.toadua
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.*
@@ -21,6 +21,8 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
 
     val loading = MutableStateFlow(false)
     val createMode = MutableStateFlow(false)
+    private val _errors = Channel<Pair<ErrorType, String?>>(Channel.RENDEZVOUS)
+    val errors = _errors.receiveAsFlow()
 
     @FlowPreview @ExperimentalCoroutinesApi
     val results = combine(query, userFilter, sortOrder) { query, userFilter, sortOrder ->
@@ -48,12 +50,12 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
                 if (search.success && search.results != null) {
                     search.results
                 } else {
-                    Log.w("search", "Failed to search: ${search.error}")
+                    _errors.send(Pair(ErrorType.SEARCH, search.error))
                     mutableListOf()
                 }
             } catch (t: Throwable) {
                 loading.value = false
-                Log.w("search", "Failed to search", t)
+                _errors.send(Pair(ErrorType.SEARCH, null))
                 mutableListOf()
             }
         }
@@ -70,10 +72,10 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
                 if (create.success && create.entry != null) {
                     uiResults.value = LiveList(mutableListOf(create.entry), null, UpdateAction.ADD)
                 } else {
-                    Log.w("createEntry", "Failed to create entry: ${create.error}")
+                    _errors.send(Pair(ErrorType.CREATE, create.error))
                 }
             } catch (t: Throwable) {
-                Log.w("createEntry", "Failed to create entry", t)
+                _errors.send(Pair(ErrorType.CREATE, null))
             }
             loading.value = false
             createMode.value = false
@@ -91,10 +93,10 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
                     entry.vote = vote
                     uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
                 } else {
-                    Log.w("voteOnEntry", "Failed to vote on entry: ${response.error}")
+                    _errors.send(Pair(ErrorType.VOTE, response.error))
                 }
             } catch (t: Throwable) {
-                Log.w("voteOnEntry", "Failed to vote on entry", t)
+                _errors.send(Pair(ErrorType.VOTE, null))
             }
         }
     }
@@ -110,10 +112,10 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
                     entry.notes.add(Note("", prefs.username.value!!, comment))
                     uiResults.value = LiveList(list, index, UpdateAction.MODIFY)
                 } else {
-                    Log.w("commentOnEntry", "Failed to comment on entry: ${note.error}")
+                    _errors.send(Pair(ErrorType.COMMENT, note.error))
                 }
             } catch (t: Throwable) {
-                Log.w("commentOnEntry", "Failed to comment on entry", t)
+                _errors.send(Pair(ErrorType.COMMENT, null))
             }
             loading.value = false
         }
@@ -128,10 +130,10 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
                 if (remove.success) {
                     uiResults.value = LiveList(list.apply { removeAt(index) }, index, UpdateAction.REMOVE)
                 } else {
-                    Log.w("deleteEntry", "Failed to delete entry: ${remove.error}")
+                    _errors.send(Pair(ErrorType.DELETE, remove.error))
                 }
             } catch (t: Throwable) {
-                Log.w("deleteEntry", "Failed to delete entry", t)
+                _errors.send(Pair(ErrorType.DELETE, null))
             }
             loading.value = false
         }

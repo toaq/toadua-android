@@ -1,11 +1,12 @@
 package town.robin.toadua
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.LoginRequest
 import town.robin.toadua.api.RegisterRequest
@@ -17,6 +18,8 @@ class AuthViewModel(val api: StateFlow<ToaduaService>, private val prefs: Toadua
     }
 
     val loading = MutableStateFlow(false)
+    private val _errors = Channel<Pair<ErrorType, String?>>(Channel.RENDEZVOUS)
+    val errors = _errors.receiveAsFlow()
 
     fun signIn(username: String, password: String) {
         loading.value = true
@@ -28,11 +31,11 @@ class AuthViewModel(val api: StateFlow<ToaduaService>, private val prefs: Toadua
                     prefs.username.value = username
                 } else {
                     loading.value = false
-                    Log.w("signIn", "Failed to sign in: ${login.error}")
+                    _errors.send(Pair(ErrorType.SIGN_IN, login.error))
                 }
             } catch (t: Throwable) {
                 loading.value = false
-                Log.w("signIn", "Failed to sign in", t)
+                _errors.send(Pair(ErrorType.SIGN_IN, null))
             }
         }
     }
@@ -47,11 +50,11 @@ class AuthViewModel(val api: StateFlow<ToaduaService>, private val prefs: Toadua
                     prefs.username.value = username
                 } else {
                     loading.value = false
-                    Log.w("createAccount", "Failed to create account: ${register.error}")
+                    _errors.send(Pair(ErrorType.CREATE_ACCOUNT, register.error))
                 }
             } catch (t: Throwable) {
                 loading.value = false
-                Log.w("createAccount", "Failed to create account", t)
+                _errors.send(Pair(ErrorType.CREATE_ACCOUNT, null))
             }
         }
     }

@@ -1,12 +1,12 @@
 package town.robin.toadua
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import town.robin.toadua.api.SearchRequest
 import town.robin.toadua.api.ToaduaService
@@ -19,6 +19,8 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
 
     val query = MutableStateFlow("")
     val loading = MutableStateFlow(false)
+    private val _errors = Channel<Pair<ErrorType, String?>>(Channel.RENDEZVOUS)
+    val errors = _errors.receiveAsFlow()
 
     @FlowPreview @ExperimentalCoroutinesApi
     val results = query.debounce(500).mapLatest { query ->
@@ -39,12 +41,12 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
                         Pair(term, search.results.find { normalized == normalize(it.head) })
                     }
                 } else {
-                    Log.w("gloss", "Failed to gloss: ${search.error}")
+                    _errors.send(Pair(ErrorType.SEARCH, search.error))
                     listOf()
                 }
             } catch (t: Throwable) {
                 loading.value = false
-                Log.w("gloss", "Failed to gloss", t)
+                _errors.send(Pair(ErrorType.SEARCH, null))
                 listOf()
             }
         }

@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         ToaduaViewModel.Factory(this)
     }
 
+    private var started = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -153,30 +155,36 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        navController = findNavController(R.id.nav_host)
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.auth_fragment -> lockNavDrawer()
-                else -> unlockNavDrawer()
-            }
-            when (destination.id) {
-                R.id.search_fragment -> binding.navDrawer.menu.findItem(R.id.nav_search).isChecked = true
-                R.id.gloss_fragment -> binding.navDrawer.menu.findItem(R.id.nav_glosser).isChecked = true
-            }
-        }
 
-        if (model.loggedIn.value) {
+        if (!started) {
+            started = true
+            navController = findNavController(R.id.nav_host)
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                when (destination.id) {
+                    R.id.auth_fragment -> lockNavDrawer()
+                    else -> unlockNavDrawer()
+                }
+                when (destination.id) {
+                    R.id.search_fragment -> binding.navDrawer.menu.findItem(R.id.nav_search).isChecked =
+                        true
+                    R.id.gloss_fragment -> binding.navDrawer.menu.findItem(R.id.nav_glosser).isChecked =
+                        true
+                }
+            }
+
             val glossQuery = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
             if (glossQuery != null) {
                 navController.popBackStack()
-                navController.navigate(R.id.gloss_fragment, bundleOf(GlossFragment.PARAM_QUERY to glossQuery))
-            }
-            else {
+                navController.navigate(
+                    R.id.gloss_fragment,
+                    bundleOf(GlossFragment.PARAM_QUERY to glossQuery)
+                )
+            } else if (model.loggedIn.value) {
                 navController.popBackStack()
                 navController.navigate(R.id.search_fragment)
             }
 
-            lifecycleScope.launch(Dispatchers.IO) { verifyAuth() }
+            if (model.loggedIn.value) lifecycleScope.launch(Dispatchers.IO) { verifyAuth() }
         }
     }
 

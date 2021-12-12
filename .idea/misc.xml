@@ -4,7 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.19010416666666666" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3734375" />
+        <entry key="app/src/main/res/drawable/ic_background.xml" value="0.3734375" />
         <entry key="app/src/main/res/drawable/ic_filter.xml" value="0.35989583333333336" />
+        <entry key="app/src/main/res/drawable/ic_foreground.xml" value="0.3734375" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3734375" />
         <entry key="app/src/main/res/drawable/ic_like_inactive.xml" value="0.3734375" />
         <entry key="app/src/main/res/drawable/ic_menu.xml" value="0.35989583333333336" />
         <entry key="app/src/main/res/drawable/nav_button_ripple.xml" value="0.3734375" />
@@ -14,7 +18,7 @@
         <entry key="app/src/main/res/layout/fragment_auth.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_auth2.xml" value="0.39114583333333336" />
         <entry key="app/src/main/res/layout/fragment_gloss.xml" value="0.3572916666666667" />
-        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/layout/gloss_card.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.3572916666666667" />
         <entry key="app/src/main/res/layout/nav_header_test_nav.xml" value="0.34427083333333336" />

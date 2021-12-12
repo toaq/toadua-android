@@ -38,6 +38,7 @@ import kotlin.math.min
 @ExperimentalCoroutinesApi
 class SearchFragment : Fragment() {
     companion object {
+        const val PARAM_QUERY = "query"
         private const val UI_BLANK = '◌'
         private const val API_BLANK = '▯'
         private const val OFFICIAL_USER = "official"
@@ -206,8 +207,12 @@ class SearchFragment : Fragment() {
                         if (!model.createMode.value && it == null) View.VISIBLE else View.GONE
                     binding.noResultsCard.visibility =
                         if (!model.createMode.value && it?.list?.isEmpty() == true) View.VISIBLE else View.GONE
-               }
+                }
             }
+        }
+
+        arguments?.getString(PARAM_QUERY)?.let {
+            binding.searchInput.setText(it)
         }
 
         return binding.root

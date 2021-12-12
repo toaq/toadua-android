@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -108,6 +110,13 @@ class GlossFragment : Fragment() {
 
             holder.binding.glossTerm.text = term
             holder.binding.glossDefinition.text = entry?.body?.replace(API_BLANK, UI_BLANK) ?: getString(R.string.missing_gloss)
+
+            holder.binding.root.setOnClickListener {
+                findNavController().apply {
+                    popBackStack()
+                    navigate(R.id.search_fragment, bundleOf(SearchFragment.PARAM_QUERY to term))
+                }
+            }
         }
     }
 }

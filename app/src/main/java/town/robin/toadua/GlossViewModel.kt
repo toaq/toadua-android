@@ -36,7 +36,7 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
             loading.value = true
             try {
                 val search = api.value.search(SearchRequest.gloss(
-                    prefs.authToken.value!!, prefs.language.value, terms
+                    prefs.authToken.value, prefs.language.value, terms
                 ))
                 loading.value = false
 

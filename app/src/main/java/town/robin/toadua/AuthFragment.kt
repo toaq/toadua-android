@@ -45,11 +45,25 @@ class AuthFragment : Fragment() {
     ): View {
         binding = FragmentAuthBinding.inflate(inflater, container, false)
 
+        binding.usernameInput.doOnTextChanged { text, _, _, _ ->
+            model.username.value = text?.toString() ?: ""
+        }
+        binding.passwordInput.doOnTextChanged { text, _, _, _ ->
+            model.password.value = text?.toString() ?: ""
+        }
         binding.continueButton.setOnClickListener {
-            when (authType) {
-                AuthType.SIGN_IN -> model::signIn
-                AuthType.CREATE_ACCOUNT -> model::createAccount
-            }.let { it(binding.usernameInput.text.toString(), binding.passwordInput.text.toString()) }
+            if (model.hasCredentials.value) {
+                when (authType) {
+                    AuthType.SIGN_IN -> model::signIn
+                    AuthType.CREATE_ACCOUNT -> model::createAccount
+                }(
+                    binding.usernameInput.text.toString(),
+                    binding.passwordInput.text.toString()
+                )
+            } else {
+                findNavController().navigate(R.id.auth_to_search)
+                activityModel.prefs.skipAuth.value = true
+            }
         }
         binding.createAccountButton.setOnClickListener {
             when (authType) {
@@ -94,11 +108,14 @@ class AuthFragment : Fragment() {
 
             input.postDelayed({ focusInput(input) }, ALERT_DIALOG_DELAY)
         }
-        binding.skipButton.setOnClickListener {
-            findNavController().navigate(R.id.auth_to_search)
-            activityModel.prefs.skipAuth.value = true
-        }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.hasCredentials.collect {
+                    binding.continueButton.setText(if (it) R.string.cont else R.string.skip)
+                }
+            }
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.loading.collect {
@@ -107,7 +124,6 @@ class AuthFragment : Fragment() {
                     binding.authLoadingIndicator.visibility = if (it) View.VISIBLE else View.GONE
                     binding.continueButton.isEnabled = !it
                     binding.createAccountButton.isEnabled = !it
-                    binding.skipButton.isEnabled = !it
                 }
             }
         }

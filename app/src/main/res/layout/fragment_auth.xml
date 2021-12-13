@@ -118,27 +118,14 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="48dp"
                 android:text="@string/change_server"
                 android:textAlignment="textEnd"
                 android:textColor="@color/pink"
                 android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/create_account_button"
                 app:layout_constraintTop_toBottomOf="@+id/create_account_button"
-                app:rippleColor="@color/pink_overlay" />
-
-            <Button
-                android:id="@+id/skip_button"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="48dp"
-                android:text="@string/skip"
-                android:textAlignment="textEnd"
-                android:textColor="@color/pink"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/change_server_button"
-                app:layout_constraintTop_toBottomOf="@+id/change_server_button"
                 app:layout_constraintVertical_bias="0.0"
                 app:rippleColor="@color/pink_overlay" />
 

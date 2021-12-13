@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import town.robin.toadua.api.LoginRequest
 import town.robin.toadua.api.RegisterRequest
@@ -17,6 +15,16 @@ class AuthViewModel(val api: StateFlow<ToaduaService>, private val prefs: Toadua
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T = AuthViewModel(api, prefs) as T
     }
+
+    val username = MutableStateFlow("")
+    val password = MutableStateFlow("")
+    val hasCredentials = combine(username, password) { username, password ->
+        username.isNotBlank() && password.isNotBlank()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false,
+    )
 
     val loading = MutableStateFlow(false)
     private val _errors = Channel<Pair<ErrorType, String?>>(Channel.RENDEZVOUS)

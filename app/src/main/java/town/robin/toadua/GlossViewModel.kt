@@ -3,6 +3,7 @@ package town.robin.toadua
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -36,7 +37,7 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
             loading.value = true
             try {
                 val search = api.value.search(SearchRequest.gloss(
-                    prefs.authToken.value, prefs.language.value, terms
+                    prefs.authToken.value, prefs.language.value, terms,
                 ))
                 loading.value = false
 
@@ -49,6 +50,8 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
                     _errors.send(Pair(ErrorType.SEARCH, search.error))
                     listOf()
                 }
+            } catch (t: CancellationException) {
+                throw t
             } catch (t: Throwable) {
                 loading.value = false
                 _errors.send(Pair(ErrorType.SEARCH, null))

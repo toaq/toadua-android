@@ -3,6 +3,7 @@ package town.robin.toadua
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -58,6 +59,8 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
                     _errors.send(Pair(ErrorType.SEARCH, search.error))
                     mutableListOf()
                 }
+            } catch (t: CancellationException) {
+                throw t
             } catch (t: Throwable) {
                 loading.value = false
                 _errors.send(Pair(ErrorType.SEARCH, null))

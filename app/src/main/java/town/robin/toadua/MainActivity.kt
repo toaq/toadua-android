@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -99,11 +100,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_language -> {
                     val input = EditText(this).apply {
+                        setText(model.prefs.language.value)
+                        inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                         layoutParams = FrameLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT,
                         ).apply {
-                            setText(model.prefs.language.value)
                             val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
                             marginStart = margin
                             marginEnd = margin

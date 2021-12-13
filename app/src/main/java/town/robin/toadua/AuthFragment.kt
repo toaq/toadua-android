@@ -2,6 +2,7 @@ package town.robin.toadua
 
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -67,6 +68,7 @@ class AuthFragment : Fragment() {
         binding.changeServerButton.setOnClickListener {
             val input = EditText(requireContext()).apply {
                 setText(activityModel.prefs.server.value)
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
                 layoutParams = FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT,

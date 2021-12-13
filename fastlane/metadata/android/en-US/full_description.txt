@@ -1,0 +1,1 @@
+Toadua is a collaborative dictionary app for the Toaq language. It allows you to quickly look up words, vote on definitions, create new dictionary entries, and even gloss longer texts.

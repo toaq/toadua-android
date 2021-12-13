@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_credits -> {
                     AlertDialog.Builder(this)
                         .setTitle(R.string.credits)
-                        .setMessage(R.string.credits_text)
+                        .setMessage(getString(R.string.credits_text, BuildConfig.VERSION_NAME))
                         .show()
                     true
                 }

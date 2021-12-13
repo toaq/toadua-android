@@ -293,7 +293,7 @@ class SearchFragment : Fragment() {
                 }
                 copy.setOnClickListener {
                     binding.createTermInput.setText(entry.head)
-                    binding.createDefinitionInput.setText(entry.body)
+                    binding.createDefinitionInput.setText(entry.body.replace(API_BLANK, UI_BLANK))
                     model.createMode.value = true
                 }
                 delete.setOnClickListener {

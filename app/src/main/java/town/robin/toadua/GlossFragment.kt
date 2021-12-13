@@ -58,9 +58,13 @@ class GlossFragment : Fragment() {
         binding.menuButton.setOnClickListener {
             (requireActivity() as MainActivity).openNavDrawer()
         }
+        binding.clearButton.setOnClickListener {
+            binding.glossInput.text.clear()
+        }
 
         binding.glossInput.doOnTextChanged { text, _, _, _ ->
             model.query.value = text?.toString() ?: ""
+            binding.clearButton.visibility = if (text?.isNotBlank() == true) View.VISIBLE else View.GONE
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

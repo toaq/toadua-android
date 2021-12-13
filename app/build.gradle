@@ -11,8 +11,8 @@ android {
         applicationId "town.robin.toadua"
         minSdk 28
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.0-rc1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

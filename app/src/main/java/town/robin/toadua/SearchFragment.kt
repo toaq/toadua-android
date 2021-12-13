@@ -88,6 +88,7 @@ class SearchFragment : Fragment() {
         }
         binding.searchInput.doOnTextChanged { text, _, _, _ ->
             model.query.value = text?.toString() ?: ""
+            binding.clearButton.visibility = if (text?.isNotEmpty() == true) View.VISIBLE else View.GONE
         }
         binding.userInput.doOnTextChanged { text, _, _, _ ->
             model.userFilter.value = text?.toString() ?: ""

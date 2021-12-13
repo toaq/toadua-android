@@ -32,22 +32,25 @@
 
             <TextView
                 android:id="@+id/auth_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="64dp"
                 android:layout_marginTop="72dp"
+                android:layout_marginEnd="64dp"
                 android:text="@string/sign_in"
                 android:textSize="36sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/auth_server"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/auth_title"
                 app:layout_constraintStart_toStartOf="@+id/auth_title"
                 app:layout_constraintTop_toBottomOf="@+id/auth_title" />
 
@@ -56,11 +59,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
-                android:layout_marginEnd="64dp"
                 android:autofillHints="username"
                 android:hint="@string/username"
                 android:inputType="text"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/auth_server"
                 app:layout_constraintStart_toStartOf="@+id/auth_server"
                 app:layout_constraintTop_toBottomOf="@+id/auth_server" />
 
@@ -73,7 +75,6 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="@+id/username_input"
-                app:layout_constraintHorizontal_bias="0.355"
                 app:layout_constraintStart_toStartOf="@+id/username_input"
                 app:layout_constraintTop_toBottomOf="@+id/username_input" />
 

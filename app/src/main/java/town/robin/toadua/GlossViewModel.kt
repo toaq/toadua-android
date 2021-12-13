@@ -63,7 +63,7 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
 
     private fun normalize(s: String) =
         Normalizer.normalize(s, Normalizer.Form.NFD)
-            .replace("\\p{Mn}+".toRegex(), "")
+            .replace("[^\\p{L}]+".toRegex(), "")
             .lowercase()
             .replace('ı', 'i')
 }

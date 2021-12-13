@@ -2,6 +2,7 @@ package town.robin.toadua
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -81,7 +83,12 @@ class AuthFragment : Fragment() {
                     activityModel.prefs.server.value = input.text.toString()
                 }
                 .setNegativeButton(R.string.cancel) { _, _ -> }
-                .show()
+                .show().apply {
+                    val button = getButton(AlertDialog.BUTTON_POSITIVE)
+                    input.doOnTextChanged { text, _, _, _ ->
+                        button.isEnabled = text?.let { Patterns.WEB_URL.matcher(it).matches() } ?: false
+                    }
+                }
 
             input.postDelayed({ focusInput(input) }, ALERT_DIALOG_DELAY)
         }

@@ -249,8 +249,7 @@ class SearchFragment : Fragment() {
                 dislike.setImageResource(if (entry.vote == -1) R.drawable.ic_dislike_active else R.drawable.ic_dislike_inactive)
                 delete.visibility = if (entry.user == activityModel.prefs.username.value) View.VISIBLE else View.INVISIBLE
 
-                // TODO: do this the non-deprecated way
-                val color = resources.getColor(if (entry.user == OFFICIAL_USER) R.color.pink else R.color.blue)
+                val color = resources.getColor(if (entry.user == OFFICIAL_USER) R.color.pink else R.color.blue, null)
                 author.setTextColor(color)
                 entryControls.setBackgroundColor(color)
 

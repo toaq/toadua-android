@@ -40,13 +40,12 @@ class AuthViewModel(val api: StateFlow<ToaduaService>, private val prefs: Toadua
                     prefs.username.value = username
                     prefs.skipAuth.value = true
                 } else {
-                    loading.value = false
                     _errors.send(Pair(ErrorType.SIGN_IN, login.error))
                 }
             } catch (t: Throwable) {
-                loading.value = false
                 _errors.send(Pair(ErrorType.SIGN_IN, null))
             }
+            loading.value = false
         }
     }
 
@@ -60,13 +59,12 @@ class AuthViewModel(val api: StateFlow<ToaduaService>, private val prefs: Toadua
                     prefs.username.value = username
                     prefs.skipAuth.value = true
                 } else {
-                    loading.value = false
                     _errors.send(Pair(ErrorType.CREATE_ACCOUNT, register.error))
                 }
             } catch (t: Throwable) {
-                loading.value = false
                 _errors.send(Pair(ErrorType.CREATE_ACCOUNT, null))
             }
+            loading.value = false
         }
     }
 }

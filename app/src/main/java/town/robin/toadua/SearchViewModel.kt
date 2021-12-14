@@ -48,7 +48,6 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
                         sortOrder,
                     )
                 )
-                loading.value = false
 
                 if (search.success && search.results != null) {
                     search.results
@@ -59,9 +58,10 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
             } catch (t: CancellationException) {
                 throw t
             } catch (t: Throwable) {
-                loading.value = false
                 _errors.send(Pair(ErrorType.SEARCH, null))
                 mutableListOf()
+            } finally {
+                loading.value = false
             }
         }
     }
@@ -74,8 +74,8 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
     }
 
     fun createEntry(term: String, definition: String) {
+        loading.value = true
         resultsScope.launch {
-            loading.value = true
             try {
                 val create = api.value.create(CreateRequest(
                     prefs.authToken.value!!, term, definition, prefs.language.value,
@@ -113,10 +113,10 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
     }
 
     fun commentOnEntry(index: Int, comment: String) {
+        loading.value = true
         resultsScope.launch {
             val list = uiResults.value!!.list
             val entry = list[index]
-            loading.value = true
             try {
                 val note = api.value.note(NoteRequest(prefs.authToken.value!!, entry.id, comment))
                 if (note.success) {
@@ -133,9 +133,9 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
     }
 
     fun deleteEntry(index: Int) {
+        loading.value = true
         resultsScope.launch {
             val list = uiResults.value!!.list
-            loading.value = true
             try {
                 val remove = api.value.remove(RemoveRequest(prefs.authToken.value!!, list[index].id))
                 if (remove.success) {

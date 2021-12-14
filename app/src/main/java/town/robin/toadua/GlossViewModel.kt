@@ -35,13 +35,12 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
         if (query.isBlank()) {
             null
         } else {
-            val terms = query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
             loading.value = true
+            val terms = query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
             try {
                 val search = api.value.search(SearchRequest.gloss(
                     prefs.authToken.value, language, terms,
                 ))
-                loading.value = false
 
                 if (search.success && search.results != null) {
                     terms.map { term ->
@@ -55,9 +54,10 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
             } catch (t: CancellationException) {
                 throw t
             } catch (t: Throwable) {
-                loading.value = false
                 _errors.send(Pair(ErrorType.SEARCH, null))
                 listOf()
+            } finally {
+                loading.value = false
             }
         }
     }.flowOn(Dispatchers.IO).stateIn(

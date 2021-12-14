@@ -28,9 +28,9 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
     val errors = _errors.receiveAsFlow()
 
     @FlowPreview @ExperimentalCoroutinesApi
-    val results = combine(query, userFilter, sortOrder) { query, userFilter, sortOrder ->
-        Triple(query, userFilter, sortOrder)
-    }.debounce(SEARCH_RATE_LIMIT).mapLatest { (query, userFilter, sortOrder) ->
+    val results = combine(query, userFilter, sortOrder, prefs.language) { query, userFilter, sortOrder, language ->
+        QueryParams(query, userFilter, sortOrder, language)
+    }.debounce(SEARCH_RATE_LIMIT).mapLatest { (query, userFilter, sortOrder, language) ->
         if (createMode.value && (query.isNotEmpty() || userFilter.isNotEmpty()))
             createMode.value = false
 
@@ -42,7 +42,7 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
                 val search = api.value.search(
                     SearchRequest.search(
                         prefs.authToken.value,
-                        prefs.language.value,
+                        language,
                         query.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() },
                         if (userFilter.isBlank()) null else userFilter,
                         sortOrder,
@@ -149,4 +149,11 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
             loading.value = false
         }
     }
+
+    private data class QueryParams(
+        val query: String,
+        val userFilter: String,
+        val sortOrder: SortOrder?,
+        val language: String,
+    )
 }

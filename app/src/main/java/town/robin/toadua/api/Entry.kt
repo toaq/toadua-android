@@ -5,9 +5,9 @@ data class Entry(
     val head: String,
     val body: String,
     val user: String,
-    val date: String, // TODO: change type
+    val date: String,
     val scope: String,
     var score: Int,
-    var vote: Int?, // TODO: change type
+    var vote: Int?,
     val notes: MutableList<Note>,
 )

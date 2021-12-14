@@ -29,7 +29,9 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
     val errors = _errors.receiveAsFlow()
 
     @FlowPreview @ExperimentalCoroutinesApi
-    val results = query.debounce(GLOSS_RATE_LIMIT).mapLatest { query ->
+    val results = combine(query, prefs.language) {
+        query, language -> Pair(query, language)
+    }.debounce(GLOSS_RATE_LIMIT).mapLatest { (query, language) ->
         if (query.isBlank()) {
             null
         } else {
@@ -37,7 +39,7 @@ class GlossViewModel(private val api: StateFlow<ToaduaService>, private val pref
             loading.value = true
             try {
                 val search = api.value.search(SearchRequest.gloss(
-                    prefs.authToken.value, prefs.language.value, terms,
+                    prefs.authToken.value, language, terms,
                 ))
                 loading.value = false
 

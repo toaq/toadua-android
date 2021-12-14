@@ -3,12 +3,9 @@ package town.robin.toadua
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import town.robin.toadua.api.*
 
 class SearchViewModel(private val api: StateFlow<ToaduaService>, private val prefs: ToaduaPrefs) : ViewModel() {
@@ -69,9 +66,15 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
         }
     }
     val uiResults = MutableStateFlow<LiveList<Entry>?>(null)
+    var resultsScope = viewModelScope + Job()
+
+    fun cancelActions() {
+        resultsScope.cancel()
+        resultsScope = viewModelScope + Job()
+    }
 
     fun createEntry(term: String, definition: String) {
-        viewModelScope.launch {
+        resultsScope.launch {
             loading.value = true
             try {
                 val create = api.value.create(CreateRequest(
@@ -91,7 +94,7 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
     }
 
     fun voteOnEntry(index: Int, vote: Int) {
-        viewModelScope.launch {
+        resultsScope.launch {
             val list = uiResults.value!!.list
             val entry = list[index]
             try {
@@ -110,7 +113,7 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
     }
 
     fun commentOnEntry(index: Int, comment: String) {
-        viewModelScope.launch {
+        resultsScope.launch {
             val list = uiResults.value!!.list
             val entry = list[index]
             loading.value = true
@@ -130,7 +133,7 @@ class SearchViewModel(private val api: StateFlow<ToaduaService>, private val pre
     }
 
     fun deleteEntry(index: Int) {
-        viewModelScope.launch {
+        resultsScope.launch {
             val list = uiResults.value!!.list
             loading.value = true
             try {

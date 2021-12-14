@@ -31,6 +31,8 @@ import town.robin.toadua.databinding.EntryCardBinding
 import android.widget.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 import kotlin.math.max
 import kotlin.math.min
 
@@ -185,6 +187,7 @@ class SearchFragment : Fragment() {
                         when (it?.updateIndex) {
                             null -> {
                                 // The entire list was changed
+                                model.cancelActions()
                                 selected.value = null
                                 notifyDataSetChanged()
                             }
@@ -274,22 +277,30 @@ class SearchFragment : Fragment() {
                             marginEnd = margin
                         }
                     }
-                    AlertDialog.Builder(requireContext())
-                        .setTitle(R.string.comment_title)
-                        .setView(FrameLayout(requireContext()).apply { addView(input) })
-                        .setPositiveButton(R.string.submit) { _, _ ->
-                            model.commentOnEntry(holder.adapterPosition, input.text.toString())
-                        }
-                        .setNegativeButton(R.string.cancel) { _, _ -> }
-                        .show().apply {
-                            val button = getButton(AlertDialog.BUTTON_POSITIVE)
-                            button.isEnabled = false
-                            input.doOnTextChanged { text, _, _, _ ->
-                                button.isEnabled = text?.isNotBlank() ?: false
-                            }
-                        }
 
-                    input.postDelayed({ focusInput(input) }, ALERT_DIALOG_DELAY)
+                    // Launch the dialog in resultsScope so it gets cancelled if results change
+                    model.resultsScope.launch {
+                        suspendCancellableCoroutine { cont ->
+                            AlertDialog.Builder(requireContext())
+                                .setTitle(R.string.comment_title)
+                                .setView(FrameLayout(requireContext()).apply { addView(input) })
+                                .setPositiveButton(R.string.submit) { _, _ ->
+                                    model.commentOnEntry(holder.adapterPosition, input.text.toString())
+                                }
+                                .setNegativeButton(R.string.cancel) { _, _ -> }
+                                .setOnDismissListener { cont.resume(Unit) }
+                                .show().apply {
+                                    val button = getButton(AlertDialog.BUTTON_POSITIVE)
+                                    button.isEnabled = false
+                                    input.doOnTextChanged { text, _, _, _ ->
+                                        button.isEnabled = text?.isNotBlank() ?: false
+                                    }
+                                    cont.invokeOnCancellation { cancel() }
+                                }
+
+                            input.postDelayed({ focusInput(input) }, ALERT_DIALOG_DELAY)
+                        }
+                    }
                 }
                 copy.setOnClickListener {
                     binding.createTermInput.setText(entry.head)
@@ -297,13 +308,21 @@ class SearchFragment : Fragment() {
                     model.createMode.value = true
                 }
                 delete.setOnClickListener {
-                    AlertDialog.Builder(requireContext())
-                        .setMessage(getString(R.string.confirm_delete, entry.head))
-                        .setPositiveButton(R.string.delete) { _, _ ->
-                            model.deleteEntry(holder.adapterPosition)
+                    // Launch the dialog in resultsScope so it gets cancelled if results change
+                    model.resultsScope.launch {
+                        suspendCancellableCoroutine { cont ->
+                            AlertDialog.Builder(requireContext())
+                                .setMessage(getString(R.string.confirm_delete, entry.head))
+                                .setPositiveButton(R.string.delete) { _, _ ->
+                                    model.deleteEntry(holder.adapterPosition)
+                                }
+                                .setNegativeButton(R.string.cancel) { _, _ -> }
+                                .setOnDismissListener { cont.resume(Unit) }
+                                .show().apply {
+                                    cont.invokeOnCancellation { cancel() }
+                                }
                         }
-                        .setNegativeButton(R.string.cancel) { _, _ -> }
-                        .show()
+                    }
                 }
             }
 

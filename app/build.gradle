@@ -11,8 +11,8 @@ android {
         applicationId "town.robin.toadua"
         minSdk 28
         targetSdk 31
-        versionCode 4
-        versionName "1.1.0-rc1"
+        versionCode 5
+        versionName "1.1.0"
     }
     buildFeatures {
         viewBinding true

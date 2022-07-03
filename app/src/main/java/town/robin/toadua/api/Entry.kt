@@ -7,7 +7,7 @@ data class Entry(
     val user: String,
     val date: String,
     val scope: String,
-    var score: Int,
-    var vote: Int?,
-    val notes: MutableList<Note>,
+    val score: Int,
+    val vote: Int?,
+    val notes: List<Note>,
 )

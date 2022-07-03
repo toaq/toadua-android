@@ -1,232 +1,53 @@
 package town.robin.toadua
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.FrameLayout
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
-import androidx.core.widget.doOnTextChanged
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import town.robin.toadua.api.WelcomeRequest
-import town.robin.toadua.databinding.ActivityMainBinding
-import town.robin.toadua.databinding.NavHeaderBinding
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import town.robin.toadua.ui.Toadua
+import town.robin.toadua.ui.ToaduaViewModel
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+private val idQueryRegex = "#([^ ]+)".toRegex()
+
 class MainActivity : AppCompatActivity() {
-    companion object {
-        private const val ALERT_DIALOG_DELAY: Long = 200
-    }
-
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var navHeaderBinding: NavHeaderBinding
-    private lateinit var navController: NavController
-    private val model: ToaduaViewModel by viewModels {
+    private val viewModel: ToaduaViewModel by viewModels {
         ToaduaViewModel.Factory(this)
     }
 
-    private var started = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        navHeaderBinding = NavHeaderBinding.bind(binding.navDrawer.getHeaderView(0))
-
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                combine(model.loggedIn, model.prefs.username, model.serverName) { loggedIn, username, serverName ->
-                    Triple(loggedIn, username, serverName)
-                }.collect { (loggedIn, username, serverName) ->
-                    navHeaderBinding.apply {
-                        if (loggedIn) {
-                            this.username.visibility = View.VISIBLE
-                            server.visibility = View.VISIBLE
-                            authStatus.setText(R.string.logged_in_as)
-                            this.username.text = username
-                            server.text = serverName
-                        } else {
-                            this.username.visibility = View.GONE
-                            server.visibility = View.GONE
-                            authStatus.text = getString(R.string.connected_to, serverName)
-                        }
-                    }
-                }
-            }
-        }
-        lifecycleScope.launch(Dispatchers.Main) {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                model.loggedIn.collect {
-                    binding.navDrawer.menu.findItem(R.id.nav_log_out).isVisible = it
-                    binding.navDrawer.menu.findItem(R.id.nav_sign_in).isVisible = !it
-                }
-            }
-        }
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // Keep the API flow alive so it reacts to server changes
-                model.api.collect { }
-            }
-        }
-
-        binding.navDrawer.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_search -> {
-                    navController.popBackStack()
-                    navController.navigate(R.id.search_fragment)
-                    closeNavDrawer()
-                    true
-                }
-                R.id.nav_glosser -> {
-                    navController.popBackStack()
-                    navController.navigate(R.id.gloss_fragment)
-                    closeNavDrawer()
-                    true
-                }
-                R.id.nav_language -> {
-                    val input = EditText(this).apply {
-                        setText(model.prefs.language.value)
-                        inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-                        layoutParams = FrameLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                        ).apply {
-                            val margin = resources.getDimensionPixelSize(R.dimen.dialog_margin)
-                            marginStart = margin
-                            marginEnd = margin
-                        }
-                    }
-                    AlertDialog.Builder(this)
-                        .setTitle(R.string.language)
-                        .setView(FrameLayout(this).apply { addView(input) })
-                        .setPositiveButton(R.string.confirm) { _, _ ->
-                            model.prefs.language.value = input.text.toString()
-                        }
-                        .setNegativeButton(R.string.cancel) { _, _ -> }
-                        .show().apply {
-                            val button = getButton(AlertDialog.BUTTON_POSITIVE)
-                            input.doOnTextChanged { text, _, _, _ ->
-                                button.isEnabled = text?.isNotBlank() ?: false
-                            }
-                        }
-
-                    input.postDelayed({ focusInput(input) }, ALERT_DIALOG_DELAY)
-                    true
-                }
-                R.id.nav_log_out -> {
-                    model.logOut()
-                    navController.popBackStack()
-                    navController.navigate(R.id.auth_fragment)
-                    closeNavDrawer()
-                    true
-                }
-                R.id.nav_sign_in -> {
-                    model.prefs.skipAuth.value = false
-                    navController.popBackStack()
-                    navController.navigate(R.id.auth_fragment)
-                    closeNavDrawer()
-                    true
-                }
-                R.id.nav_credits -> {
-                    AlertDialog.Builder(this)
-                        .setTitle(R.string.credits)
-                        .setMessage(getString(R.string.credits_text, BuildConfig.VERSION_NAME))
-                        .show()
-                    true
-                }
-                else -> false
-            }
-        }
-
-        setContentView(binding.root)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        handleIntent(intent)
+        setContent { Toadua(viewModel) }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        if (!started) {
-            started = true
-            navController = findNavController(R.id.nav_host)
-            navController.addOnDestinationChangedListener { _, destination, _ ->
-                when (destination.id) {
-                    R.id.auth_fragment -> lockNavDrawer()
-                    else -> unlockNavDrawer()
-                }
-                when (destination.id) {
-                    R.id.search_fragment -> binding.navDrawer.menu.findItem(R.id.nav_search).isChecked =
-                        true
-                    R.id.gloss_fragment -> binding.navDrawer.menu.findItem(R.id.nav_glosser).isChecked =
-                        true
-                }
-            }
-
-            val glossQuery = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)
-            if (glossQuery != null) {
-                navController.popBackStack()
-                navController.navigate(
-                    R.id.gloss_fragment,
-                    bundleOf(GlossFragment.PARAM_QUERY to glossQuery)
-                )
-            } else if (model.prefs.skipAuth.value) {
-                navController.popBackStack()
-                navController.navigate(R.id.search_fragment)
-            }
-
-            if (model.loggedIn.value) lifecycleScope.launch(Dispatchers.IO) { verifyAuth() }
-        }
+    override fun onPause() {
+        super.onPause()
+        viewModel.onActivityPause()
     }
 
-    // Verify the access token is still valid
-    private suspend fun verifyAuth() {
-        try {
-            val welcome = model.api.value.welcome(WelcomeRequest(model.prefs.authToken.value!!))
-            if (!(welcome.success && welcome.name == model.prefs.username.value)) {
-                model.invalidateSession()
-                withContext(Dispatchers.Main) {
-                    navController.popBackStack()
-                    navController.navigate(R.id.auth_fragment)
-                }
-            }
-        } catch (t: Throwable) {
-            withContext(Dispatchers.Main) {
-                AlertDialog.Builder(this@MainActivity)
-                    .setMessage(R.string.cant_connect)
-                    .setPositiveButton(R.string.try_again) { _, _ ->
-                        lifecycleScope.launch(Dispatchers.IO) { verifyAuth() }
-                    }
-                    .setNegativeButton(R.string.log_out) { _, _ ->
-                        model.invalidateSession()
-                        navController.popBackStack()
-                        navController.navigate(R.id.auth_fragment)
-                    }
-                    .show()
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        viewModel.onActivityResume()
     }
 
-    fun openNavDrawer() = binding.root.openDrawer(binding.navDrawer)
-    private fun closeNavDrawer() = binding.root.closeDrawer(binding.navDrawer)
-    private fun lockNavDrawer() = binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, binding.navDrawer)
-    private fun unlockNavDrawer() = binding.root.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, binding.navDrawer)
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
 
-    private fun focusInput(view: View) {
-        view.requestFocus()
-        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-            .showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    private fun handleIntent(intent: Intent) {
+        // TODO: bring back support for text selection intents
+        if (intent.action == Intent.ACTION_VIEW) {
+            intent.data?.let { uri ->
+                uri.fragment?.let { query ->
+                    idQueryRegex.matchEntire(query)?.groupValues?.getOrNull(1)?.let { id ->
+                        viewModel.setIdFilter(id)
+                    }
+                }
+            }
+        }
     }
 }

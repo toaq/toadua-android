@@ -1,6 +1,11 @@
 package town.robin.toadua.api
 
-class SearchRequest(val token: String?, val query: List<Any>, sortOrder: SortOrder?) : ToaduaRequest {
+class SearchRequest(
+    val token: String?,
+    val query: List<Any>,
+    sortOrder: SortOrder?,
+    val limit: Int?,
+) : ToaduaRequest {
     override val action = "search"
 
     val ordering = when (sortOrder) {
@@ -13,23 +18,24 @@ class SearchRequest(val token: String?, val query: List<Any>, sortOrder: SortOrd
     }
 
     companion object {
-        fun search(token: String?, language: String, terms: List<String>, userFilter: String?, sortOrder: SortOrder?): SearchRequest {
-            val conjuncts = terms.map { listOf("term", it) }.toMutableList()
+        fun search(
+            token: String?,
+            language: String?,
+            terms: List<String> = listOf(),
+            userFilter: String? = null,
+            idFilter: String? = null,
+            arityFilter: Arity? = null,
+            sortOrder: SortOrder? = null,
+            limit: Int? = null,
+        ): SearchRequest {
+            val conjuncts = terms.map { listOf("term", it) }.toMutableList<Any>()
+            if (language != null) conjuncts.add(listOf("scope", language))
             if (userFilter != null) conjuncts.add(listOf("user", userFilter))
-            val query = listOf("and", listOf("scope", language), *conjuncts.toTypedArray())
+            if (idFilter != null) conjuncts.add(listOf("id", idFilter))
+            if (arityFilter != null) conjuncts.add(listOf("arity", arityFilter.number))
 
-            return SearchRequest(token, query, sortOrder)
-        }
-
-        fun gloss(token: String?, language: String, terms: List<String>): SearchRequest {
-            val conjuncts = terms.map { listOf("term", it) }
-            val query = listOf(
-                "and",
-                listOf("scope", language),
-                if (conjuncts.size == 1) conjuncts.first() else listOf("or", *conjuncts.toTypedArray())
-            )
-
-            return SearchRequest(token, query, null)
+            val query = listOf("and", *conjuncts.toTypedArray())
+            return SearchRequest(token, query, sortOrder, limit)
         }
     }
 }

@@ -31,7 +31,7 @@ fun recentlyAdded(
         title = { Text(stringResource(R.string.recently_added)) },
     ) {
         if (entries == null) {
-            item { SkeletonEntryCard(Modifier.alpha(0.5f)) }
+            items(3) { SkeletonEntryCard(Modifier.alpha(0.5f)) }
         } else {
             items(entries, { it.id }) {
                 EntryCard(

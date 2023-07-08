@@ -18,8 +18,7 @@ import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 private const val prefsKey = "prefs"
-//private const val server = "https://toadua.uakci.pl/"
-private const val server = "http://192.168.0.52:29138/"
+private const val server = "https://toadua.uakci.pl/"
 private const val recentlyAddedCount = 20
 private val searchRateLimit = 250.toDuration(DurationUnit.MILLISECONDS)
 private val illegalUsernameCharacters = Regex("[^a-zA-Z]")

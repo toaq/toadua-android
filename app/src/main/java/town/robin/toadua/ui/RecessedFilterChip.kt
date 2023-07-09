@@ -37,7 +37,7 @@ fun RecessedFilterChip(
     colors: SelectableChipColors = recessedFilterChipColors(),
     elevation: SelectableChipElevation? = FilterChipDefaults.filterChipElevation(),
     border: SelectableChipBorder? = null,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) = FilterChip(
     selected,
     onClick,

@@ -145,7 +145,9 @@ fun EntryCard(
                                             DropdownMenuItem(
                                                 text = { Text(stringResource(R.string.comment)) },
                                                 onClick = {
-                                                    showMoreActions = false; onPendingCommentChange("")
+                                                    showMoreActions = false; onPendingCommentChange(
+                                                    ""
+                                                )
                                                 },
                                                 leadingIcon = {
                                                     Icon(
@@ -181,7 +183,9 @@ fun EntryCard(
                                             )
                                             DropdownMenuItem(
                                                 text = { Text(stringResource(R.string.edit)) },
-                                                onClick = { showMoreActions = false; onStartEdit() },
+                                                onClick = {
+                                                    showMoreActions = false; onStartEdit()
+                                                },
                                                 leadingIcon = {
                                                     Icon(
                                                         imageVector = Icons.Outlined.Edit,
@@ -293,7 +297,9 @@ fun EntryCard(
                             )
                             ButtonRow(
                                 modifier = Modifier.padding(
-                                    start = cardPadding, end = cardPadding, bottom = smallNotePadding,
+                                    start = cardPadding,
+                                    end = cardPadding,
+                                    bottom = smallNotePadding,
                                 )
                             ) {
                                 OutlinedButton(

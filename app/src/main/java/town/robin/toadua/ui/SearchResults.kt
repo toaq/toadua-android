@@ -47,11 +47,20 @@ fun searchResults(
                         )
                     }
                 }
+
                 else -> {
                     listSection(
                         scope = this,
                         key = "entries",
-                        title = { Text(pluralStringResource(R.plurals.some_results, entries.size, entries.size)) },
+                        title = {
+                            Text(
+                                pluralStringResource(
+                                    R.plurals.some_results,
+                                    entries.size,
+                                    entries.size
+                                )
+                            )
+                        },
                     ) {
                         items(entries, { it.id }) {
                             EntryCard(

@@ -50,7 +50,8 @@ fun ComposeEntryCard(
     var termFocused by remember { mutableStateOf(false) }
     var definitionFocused by remember { mutableStateOf(false) }
     var definitionState by remember { mutableStateOf(TextFieldValue(definition)) }
-    val expanded = !mayCollapse || termFocused || definitionFocused || term.isNotEmpty() || definition.isNotEmpty()
+    val expanded =
+        !mayCollapse || termFocused || definitionFocused || term.isNotEmpty() || definition.isNotEmpty()
 
     if (definitionState.text != definition) definitionState = TextFieldValue(definition)
 

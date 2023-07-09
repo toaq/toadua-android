@@ -39,9 +39,9 @@ val cardPadding = 16.dp
 val crossfade = fadeIn() togetherWith fadeOut()
 val slideFadeAndReplace = fun(slideDistance: Int): ContentTransform {
     val inSpec = slideInVertically(tween(400, 400)) { -slideDistance } +
-            fadeIn(tween(400, 400))
+        fadeIn(tween(400, 400))
     val outSpec = slideOutVertically(tween(400)) { -slideDistance } +
-            fadeOut(tween(400))
+        fadeOut(tween(400))
     return inSpec togetherWith outSpec
 }
 

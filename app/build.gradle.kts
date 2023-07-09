@@ -15,9 +15,11 @@ android {
         targetSdk = 33
         versionCode = 5
         versionName = "1.1.0"
-        resourceConfigurations.addAll(listOf(
-            "en", "b+qtq+Latn", "b+jbo", "b+tok", "ja", "b+zh+Hans", "es", "fr", "de", "pl",
-        ))
+        resourceConfigurations.addAll(
+            listOf(
+                "en", "b+qtq+Latn", "b+jbo", "b+tok", "ja", "b+zh+Hans", "es", "fr", "de", "pl",
+            )
+        )
         manifestPlaceholders += mapOf(
             "apiScheme" to "https",
             "apiHost" to "toadua.uakci.pl",
@@ -33,7 +35,10 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("debug")
             manifestPlaceholders["networkSecurityConfig"] = "@xml/network_security_config_release"
         }

@@ -159,10 +159,15 @@ fun Toadua(viewModel: ToaduaViewModel) {
                         onSortOrderChange = viewModel::setSortOrder,
                     )
 
-                    val slideDistance = with (LocalDensity.current) { 16.dp.toPx().toInt() }
+                    val slideDistance = with(LocalDensity.current) { 16.dp.toPx().toInt() }
 
                     AnimatedContent(
-                        targetState = remember(searching, results) { MainContent(searching, results) },
+                        targetState = remember(searching, results) {
+                            MainContent(
+                                searching,
+                                results
+                            )
+                        },
                         contentKey = { content ->
                             if (content.searching) MainContentKey.LOADING_RESULTS
                             else if (results == null) MainContentKey.LANDING

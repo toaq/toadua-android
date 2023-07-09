@@ -8,15 +8,32 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ToaduaService {
-    @POST(API_ENDPOINT) suspend fun login(@Body body: LoginRequest): LoginResponse
-    @POST(API_ENDPOINT) suspend fun register(@Body body: RegisterRequest): RegisterResponse
-    @POST(API_ENDPOINT) suspend fun logout(@Body body: LogoutRequest): LogoutResponse
-    @POST(API_ENDPOINT) suspend fun welcome(@Body body: WelcomeRequest): WelcomeResponse
-    @POST(API_ENDPOINT) suspend fun search(@Body body: SearchRequest): SearchResponse
-    @POST(API_ENDPOINT) suspend fun create(@Body body: CreateRequest): CreateResponse
-    @POST(API_ENDPOINT) suspend fun remove(@Body body: RemoveRequest): RemoveResponse
-    @POST(API_ENDPOINT) suspend fun vote(@Body body: VoteRequest): VoteResponse
-    @POST(API_ENDPOINT) suspend fun note(@Body body: NoteRequest): NoteResponse
+    @POST(API_ENDPOINT)
+    suspend fun login(@Body body: LoginRequest): LoginResponse
+
+    @POST(API_ENDPOINT)
+    suspend fun register(@Body body: RegisterRequest): RegisterResponse
+
+    @POST(API_ENDPOINT)
+    suspend fun logout(@Body body: LogoutRequest): LogoutResponse
+
+    @POST(API_ENDPOINT)
+    suspend fun welcome(@Body body: WelcomeRequest): WelcomeResponse
+
+    @POST(API_ENDPOINT)
+    suspend fun search(@Body body: SearchRequest): SearchResponse
+
+    @POST(API_ENDPOINT)
+    suspend fun create(@Body body: CreateRequest): CreateResponse
+
+    @POST(API_ENDPOINT)
+    suspend fun remove(@Body body: RemoveRequest): RemoveResponse
+
+    @POST(API_ENDPOINT)
+    suspend fun vote(@Body body: VoteRequest): VoteResponse
+
+    @POST(API_ENDPOINT)
+    suspend fun note(@Body body: NoteRequest): NoteResponse
 
     companion object {
         private const val API_ENDPOINT = "/api"

@@ -45,15 +45,18 @@ fun NewLanguageDialog(
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment =  Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 OutlinedTextField(
                     value = code,
                     onValueChange = { code = it },
                     label = { Text(stringResource(R.string.language_code)) },
-                    placeholder = { Text(stringResource(R.string.language_code_example))},
+                    placeholder = { Text(stringResource(R.string.language_code_example)) },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Ascii),
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Ascii
+                    ),
                 )
             }
         }

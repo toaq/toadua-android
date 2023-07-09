@@ -23,7 +23,8 @@ private const val recentlyAddedCount = 20
 private val searchRateLimit = 250.toDuration(DurationUnit.MILLISECONDS)
 private val illegalUsernameCharacters = Regex("[^a-zA-Z]")
 private const val maxUsernameLength = 64
-private val correctAntiSpamAnswers = setOf("hoemai", "hoemaı", "jaffra", "solpa'i", "solpahi", "selpa'i", "selpahi")
+private val correctAntiSpamAnswers =
+    setOf("hoemai", "hoemaı", "jaffra", "solpa'i", "solpahi", "selpa'i", "selpahi")
 
 private val defaultLanguages = mapOf(
     "en" to Language("en", "en", "English"),
@@ -70,7 +71,8 @@ class ToaduaViewModel(context: Context) : ViewModel() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T = ToaduaViewModel(context) as T
     }
 
-    private val prefs = ToaduaPrefs(viewModelScope, context.getSharedPreferences(prefsKey, Context.MODE_PRIVATE))
+    private val prefs =
+        ToaduaPrefs(viewModelScope, context.getSharedPreferences(prefsKey, Context.MODE_PRIVATE))
     val language: StateFlow<String> = prefs.language
     val username: StateFlow<String?> = prefs.username
 
@@ -182,7 +184,8 @@ class ToaduaViewModel(context: Context) : ViewModel() {
             _createAccountState.value = CreateAccountState.WAITING_FOR_INPUT
         if (_signInState.value == SignInState.BAD_USERNAME)
             _signInState.value = SignInState.WAITING_FOR_INPUT
-        _pendingUsername.value = illegalUsernameCharacters.replace(value, "").take(maxUsernameLength)
+        _pendingUsername.value =
+            illegalUsernameCharacters.replace(value, "").take(maxUsernameLength)
     }
 
     private val _pendingPassword = MutableStateFlow("")
@@ -338,14 +341,17 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     fun selectLanguage(code: String) {
         val trimmedCode = code.trim()
         if (trimmedCode !in _languages.value)
-            _languages.value = _languages.value.plus(trimmedCode to Language("en", trimmedCode, trimmedCode))
+            _languages.value =
+                _languages.value.plus(trimmedCode to Language("en", trimmedCode, trimmedCode))
         prefs.language.value = trimmedCode
         // Set a matching locale
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(_languages.value[trimmedCode]?.locale))
     }
 
     // Ensure the language is present in the map and we start with a matching locale
-    init { selectLanguage(language.value) }
+    init {
+        selectLanguage(language.value)
+    }
 
     private val _query = MutableStateFlow(emptyQuery)
     val query: StateFlow<QueryParams> = _query
@@ -465,12 +471,14 @@ class ToaduaViewModel(context: Context) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val create = api.create(CreateRequest(
-                    authToken,
-                    data.term,
-                    data.definition.replace(uiBlank, modelBlank),
-                    prefs.language.value,
-                ))
+                val create = api.create(
+                    CreateRequest(
+                        authToken,
+                        data.term,
+                        data.definition.replace(uiBlank, modelBlank),
+                        prefs.language.value,
+                    )
+                )
                 if (create.success && create.entry != null) {
                     // Populate the view with the returned entry
                     val entry = Entry(create.entry)
@@ -574,7 +582,12 @@ class ToaduaViewModel(context: Context) : ViewModel() {
                 val note = api.note(NoteRequest(authToken, e.id, comment.content))
                 if (note.success) {
                     val c = Comment(username, comment.content)
-                    updateEntriesWithId(e.id) { it.copy(comments = it.comments.plus(c), pendingComment = null) }
+                    updateEntriesWithId(e.id) {
+                        it.copy(
+                            comments = it.comments.plus(c),
+                            pendingComment = null
+                        )
+                    }
                 } else {
                     Log.e("commentOnEntry", "Error commenting: ${note.error}")
                     _errors.send(ErrorType.COMMENT)

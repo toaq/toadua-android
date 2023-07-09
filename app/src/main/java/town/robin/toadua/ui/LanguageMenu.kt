@@ -40,7 +40,12 @@ fun LanguageMenu(
             DropdownMenuItem(
                 text = { Text(it.value.name) },
                 onClick = { onSelectLanguage(it.key); expanded = false },
-                trailingIcon = { if (language == it.key) Icon(Icons.Outlined.Check, stringResource(R.string.selected)) }
+                trailingIcon = {
+                    if (language == it.key) Icon(
+                        Icons.Outlined.Check,
+                        stringResource(R.string.selected)
+                    )
+                }
             )
         }
         DropdownMenuItem(

@@ -51,7 +51,7 @@ fun SignInDialog(
         title = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment =  Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(stringResource(R.string.sign_in), textAlign = TextAlign.Center)
                 Text(
@@ -66,7 +66,7 @@ fun SignInDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment =  Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 OutlinedTextField(
                     value = username,
@@ -74,16 +74,21 @@ fun SignInDialog(
                     label = { Text(stringResource(R.string.username)) },
                     singleLine = true,
                     enabled = !busy,
-                    keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Ascii),
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Ascii
+                    ),
                     isError = state == SignInState.BAD_USERNAME,
                     supportingText = (
                         if (state == SignInState.BAD_USERNAME)
-                            { -> Text(
-                                stringResource(R.string.cant_find_account),
-                                color = MaterialTheme.colorScheme.error
-                            ) }
+                            { ->
+                                Text(
+                                    stringResource(R.string.cant_find_account),
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
                         else null
-                    ),
+                        ),
                 )
                 OutlinedTextField(
                     value = password,
@@ -92,16 +97,21 @@ fun SignInDialog(
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     enabled = !busy,
-                    keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Password),
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Password
+                    ),
                     isError = state == SignInState.BAD_PASSWORD,
                     supportingText = (
                         if (state == SignInState.BAD_PASSWORD)
-                            { -> Text(
-                                stringResource(R.string.incorrect_password),
-                                color = MaterialTheme.colorScheme.error
-                            ) }
+                            { ->
+                                Text(
+                                    stringResource(R.string.incorrect_password),
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
                         else null
-                    ),
+                        ),
                 )
                 if (state == SignInState.UNKNOWN_ERROR) {
                     Text(

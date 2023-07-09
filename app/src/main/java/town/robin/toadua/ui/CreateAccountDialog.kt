@@ -53,7 +53,7 @@ fun CreateAccountDialog(
         title = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment =  Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(stringResource(R.string.create_account), textAlign = TextAlign.Center)
                 Text(
@@ -68,7 +68,7 @@ fun CreateAccountDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment =  Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 OutlinedTextField(
                     value = username,
@@ -76,16 +76,21 @@ fun CreateAccountDialog(
                     label = { Text(stringResource(R.string.username)) },
                     singleLine = true,
                     enabled = !busy,
-                    keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Ascii),
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Ascii
+                    ),
                     isError = state == CreateAccountState.USERNAME_TAKEN,
                     supportingText = (
                         if (state == CreateAccountState.USERNAME_TAKEN)
-                            { -> Text(
-                                stringResource(R.string.username_taken),
-                                color = MaterialTheme.colorScheme.error
-                            ) }
+                            { ->
+                                Text(
+                                    stringResource(R.string.username_taken),
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
                         else null
-                    ),
+                        ),
                 )
                 OutlinedTextField(
                     value = password,
@@ -94,7 +99,10 @@ fun CreateAccountDialog(
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     enabled = !busy,
-                    keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Password),
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Password
+                    ),
                 )
                 OutlinedTextField(
                     value = antiSpamAnswer,

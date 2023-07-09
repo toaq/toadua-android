@@ -15,7 +15,7 @@ fun ButtonRow(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
 ) {
-    Box(modifier.fillMaxWidth(), contentAlignment =  Alignment.CenterEnd) {
+    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), content = content)
     }
 }

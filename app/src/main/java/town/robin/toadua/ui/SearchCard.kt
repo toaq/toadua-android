@@ -167,7 +167,10 @@ fun SearchCard(
                 onValueChange = { stagedUserFilter = it },
                 label = { Text(stringResource(R.string.username)) },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Ascii),
+                keyboardOptions = KeyboardOptions(
+                    autoCorrect = false,
+                    keyboardType = KeyboardType.Ascii
+                ),
             )
         }
     )
@@ -195,7 +198,10 @@ fun SearchCard(
                 label = { Text(stringResource(R.string.entry_id)) },
                 singleLine = true,
                 leadingIcon = { Text("#", style = MaterialTheme.typography.bodyLarge) },
-                keyboardOptions = KeyboardOptions(autoCorrect = false, keyboardType = KeyboardType.Ascii),
+                keyboardOptions = KeyboardOptions(
+                    autoCorrect = false,
+                    keyboardType = KeyboardType.Ascii
+                ),
             )
         }
     )
@@ -286,7 +292,10 @@ fun SearchCard(
                 }
                 key("expand") {
                     IconButton(onClick = { expanded = !expanded }) {
-                        if (expanded) Icon(Icons.Outlined.ExpandLess, stringResource(R.string.collapse))
+                        if (expanded) Icon(
+                            Icons.Outlined.ExpandLess,
+                            stringResource(R.string.collapse)
+                        )
                         else Icon(Icons.Outlined.ExpandMore, stringResource(R.string.expand))
                     }
                 }
@@ -299,12 +308,22 @@ fun SearchCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             ChipGroup(
-                label = { Text(stringResource(R.string.filter_by), style = MaterialTheme.typography.labelMedium) },
+                label = {
+                    Text(
+                        stringResource(R.string.filter_by),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                },
             ) {
                 filters.map { SearchFilterChip(it) }
             }
             ChipGroup(
-                label = { Text(stringResource(R.string.sort_by), style = MaterialTheme.typography.labelMedium) },
+                label = {
+                    Text(
+                        stringResource(R.string.sort_by),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                },
             ) {
                 val sortChip = @Composable { key: SortOrder? ->
                     val selected = key == sortOrder

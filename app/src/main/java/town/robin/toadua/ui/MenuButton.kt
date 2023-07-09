@@ -25,7 +25,10 @@ fun MenuButton(
     menuContent: @Composable ColumnScope.() -> Unit,
 ) {
     Box {
-        FilledTonalButton(onClick = onClick, contentPadding = ButtonDefaults.ButtonWithIconContentPadding) {
+        FilledTonalButton(
+            onClick = onClick,
+            contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+        ) {
             Icon(icon, null, modifier = Modifier.size(ButtonDefaults.IconSize))
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
             Text(label)

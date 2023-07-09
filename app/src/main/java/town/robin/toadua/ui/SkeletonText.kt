@@ -21,7 +21,7 @@ fun SkeletonText(
     modifier: Modifier = Modifier,
     style: TextStyle = LocalTextStyle.current,
 ) {
-    with (LocalDensity.current) {
+    with(LocalDensity.current) {
         val fontSize = style.fontSize.toDp()
         val lineHeight = style.lineHeight.toDp()
 

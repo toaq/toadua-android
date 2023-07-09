@@ -28,7 +28,11 @@ interface GroupedLazyListScope : LazyListScope {
 @Parcelize
 private data class ScopedKey(val key: @RawValue Any, val scopeKey: @RawValue Any) : Parcelable
 
-private fun withGroups(scope: LazyListScope, spacedBy: Dp, content: GroupedLazyListScope.() -> Unit) {
+private fun withGroups(
+    scope: LazyListScope,
+    spacedBy: Dp,
+    content: GroupedLazyListScope.() -> Unit,
+) {
     content.invoke(object : GroupedLazyListScope {
         var scopeKey: Any? = null
         var index = 0
@@ -38,7 +42,7 @@ private fun withGroups(scope: LazyListScope, spacedBy: Dp, content: GroupedLazyL
         override fun item(
             key: Any?,
             contentType: Any?,
-            content: @Composable LazyItemScope.() -> Unit
+            content: @Composable LazyItemScope.() -> Unit,
         ) {
             val scopedKey = scopeKey?.let {
                 ScopedKey(key ?: index, it)
@@ -57,24 +61,28 @@ private fun withGroups(scope: LazyListScope, spacedBy: Dp, content: GroupedLazyL
             count: Int,
             key: ((index: Int) -> Any)?,
             contentType: (index: Int) -> Any?,
-            itemContent: @Composable LazyItemScope.(index: Int) -> Unit
+            itemContent: @Composable LazyItemScope.(index: Int) -> Unit,
         ) {
             val scopedKey = index.let { baseIndex ->
                 (key ?: { index -> baseIndex + index }).let { key ->
                     scopeKey?.let { scopeKey ->
-                        key.let { { index: Int ->
-                            ScopedKey(it(index), scopeKey)
-                        } }
+                        key.let {
+                            { index: Int ->
+                                ScopedKey(it(index), scopeKey)
+                            }
+                        }
                     } ?: key
                 }
             }
-            spaceBefore.let { spaceBefore -> spaceAfter.let { spaceAfter ->
-                scope.items(count, scopedKey, contentType) { index ->
-                    val currentSpacing = if (index == 0) spaceBefore else spaceAfter
-                    if (currentSpacing != 0.dp) Spacer(Modifier.height(currentSpacing))
-                    itemContent(index)
+            spaceBefore.let { spaceBefore ->
+                spaceAfter.let { spaceAfter ->
+                    scope.items(count, scopedKey, contentType) { index ->
+                        val currentSpacing = if (index == 0) spaceBefore else spaceAfter
+                        if (currentSpacing != 0.dp) Spacer(Modifier.height(currentSpacing))
+                        itemContent(index)
+                    }
                 }
-            } }
+            }
             index += count
             spaceBefore = spaceAfter
         }
@@ -93,7 +101,7 @@ private fun withGroups(scope: LazyListScope, spacedBy: Dp, content: GroupedLazyL
         override fun stickyHeader(
             key: Any?,
             contentType: Any?,
-            content: @Composable LazyItemScope.() -> Unit
+            content: @Composable LazyItemScope.() -> Unit,
         ) {
             val scopedKey = scopeKey?.let {
                 ScopedKey(key ?: index, it)

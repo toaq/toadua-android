@@ -18,11 +18,11 @@ android {
         resourceConfigurations.addAll(listOf(
             "en", "b+qtq+Latn", "b+jbo", "b+tok", "ja", "b+zh+Hans", "es", "fr", "de", "pl",
         ))
-        manifestPlaceholders.run {
-            put("apiScheme", "https")
-            put("apiHost", "toadua.uakci.pl")
-            put("apiPath", "/")
-        }
+        manifestPlaceholders += mapOf(
+            "apiScheme" to "https",
+            "apiHost" to "toadua.uakci.pl",
+            "apiPath" to "/",
+        )
     }
 
     buildFeatures {
@@ -34,6 +34,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
             manifestPlaceholders["networkSecurityConfig"] = "@xml/network_security_config_release"
         }
         getByName("debug") {

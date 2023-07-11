@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package town.robin.toadua.api
 
 class CreateRequest(

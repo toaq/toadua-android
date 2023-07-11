@@ -17,12 +17,12 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-private const val prefsKey = "prefs"
-private const val server = "https://toadua.uakci.pl/"
-private const val recentlyAddedCount = 20
+private const val PREFS_KEY = "prefs"
+private const val SERVER = "https://toadua.uakci.pl/"
+private const val RECENTLY_ADDED_COUNT = 20
 private val searchRateLimit = 250.toDuration(DurationUnit.MILLISECONDS)
 private val illegalUsernameCharacters = Regex("[^a-zA-Z]")
-private const val maxUsernameLength = 64
+private const val MAX_USERNAME_LENGTH = 64
 private val correctAntiSpamAnswers =
     setOf("hoemai", "hoemaı", "jaffra", "solpa'i", "solpahi", "selpa'i", "selpahi")
 
@@ -72,11 +72,11 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     }
 
     private val prefs =
-        ToaduaPrefs(viewModelScope, context.getSharedPreferences(prefsKey, Context.MODE_PRIVATE))
+        ToaduaPrefs(viewModelScope, context.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE))
     val language: StateFlow<String> = prefs.language
     val username: StateFlow<String?> = prefs.username
 
-    private val api = ToaduaService.create(server)
+    private val api = ToaduaService.create(SERVER)
 
     private val _wordOfTheDay = MutableStateFlow<Entry?>(null)
     val wordOfTheDay: StateFlow<Entry?> = _wordOfTheDay
@@ -160,7 +160,7 @@ class ToaduaViewModel(context: Context) : ViewModel() {
                         prefs.authToken.value,
                         null,
                         sortOrder = SortOrder.NEWEST,
-                        limit = recentlyAddedCount,
+                        limit = RECENTLY_ADDED_COUNT,
                     )
                 )
                 if (search.success && !search.results.isNullOrEmpty()) {
@@ -185,7 +185,7 @@ class ToaduaViewModel(context: Context) : ViewModel() {
         if (_signInState.value == SignInState.BAD_USERNAME)
             _signInState.value = SignInState.WAITING_FOR_INPUT
         _pendingUsername.value =
-            illegalUsernameCharacters.replace(value, "").take(maxUsernameLength)
+            illegalUsernameCharacters.replace(value, "").take(MAX_USERNAME_LENGTH)
     }
 
     private val _pendingPassword = MutableStateFlow("")
@@ -701,7 +701,7 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     }
 
     fun getEntryLink(id: String): URI {
-        val baseUrl = URI(server)
+        val baseUrl = URI(SERVER)
         return URI(baseUrl.scheme, baseUrl.authority, baseUrl.path, "#$id")
     }
 

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package town.robin.toadua.api
 
 class LoginRequest(username: String, password: String) : ToaduaRequest {

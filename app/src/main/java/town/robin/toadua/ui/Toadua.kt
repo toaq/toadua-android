@@ -184,6 +184,7 @@ fun Toadua(viewModel: ToaduaViewModel) {
                                 slideFadeAndReplace(slideDistance).using(SizeTransform(clip = false))
                             }
                         },
+                        label = "main_content",
                     ) { content ->
                         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                             if (!content.searching && content.results == null)

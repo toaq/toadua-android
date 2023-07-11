@@ -46,7 +46,7 @@ fun EntryCard(
     onEditDefinitionChange: (definition: String) -> Unit,
     onDelete: () -> Unit,
 ) {
-    AnimatedContent(entry, contentKey = { it.pendingEdit == null }) { e ->
+    AnimatedContent(entry, contentKey = { it.pendingEdit == null }, label = "edit") { e ->
         if (e.pendingEdit == null) {
             val scope = rememberCoroutineScope()
             val clipboardManager = LocalClipboardManager.current
@@ -158,7 +158,10 @@ fun EntryCard(
                                             )
                                             DropdownMenuItem(
                                                 text = {
-                                                    Crossfade(targetState = linkCopied) {
+                                                    Crossfade(
+                                                        targetState = linkCopied,
+                                                        label = "copy_link"
+                                                    ) {
                                                         Text(
                                                             if (it) stringResource(R.string.link_copied)
                                                             else stringResource(R.string.copy_link),
@@ -171,7 +174,10 @@ fun EntryCard(
                                                     linkCopied = true
                                                 },
                                                 leadingIcon = {
-                                                    Crossfade(targetState = linkCopied) {
+                                                    Crossfade(
+                                                        targetState = linkCopied,
+                                                        label = "copy_link_icon"
+                                                    ) {
                                                         Icon(
                                                             imageVector =
                                                             if (it) Icons.Outlined.Check

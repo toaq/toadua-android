@@ -147,6 +147,7 @@ fun Toadua(viewModel: ToaduaViewModel) {
                             username = username,
                             onShowCreateAccount = viewModel::showCreateAccount,
                             onShowSignIn = viewModel::showSignIn,
+                            onShowMyWords = viewModel::showMyWords,
                             onSignOut = viewModel::signOut,
                         )
                     }

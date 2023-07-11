@@ -85,4 +85,5 @@
     <string name="ok">OK</string>
     <string name="out_of_date_description">Diese App scheint veraltet zu sein, und funktioniert möglicherweise nicht mehr. Überprüfe deinen App-Store auf Updates.</string>
     <string name="out_of_date">Veraltet</string>
+    <string name="my_words">Meine Wörter</string>
 </resources>

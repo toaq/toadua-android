@@ -81,6 +81,7 @@
     <string name="ok">OK</string>
     <string name="out_of_date_description">This app appears to be out of date, and may not work anymore. Please check your app store for updates.</string>
     <string name="out_of_date">Out of date</string>
+    <string name="my_words">My words</string>
     <plurals name="some_results">
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>

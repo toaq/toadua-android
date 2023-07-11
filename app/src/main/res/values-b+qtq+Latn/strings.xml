@@ -71,7 +71,7 @@
     <string name="comment_error">Buaq sá raı, lä shoe dıeq súq ráqkuqse ꝡo</string>
     <string name="guest">Choaq</string>
     <string name="sign_out">Mụlogıq</string>
-    <string name="about">Raq</string>
+    <string name="about">Báq raq</string>
     <string name="word_of_the_day">Tóa po cháq</string>
     <string name="hide">Shıao</string>
     <plurals name="some_results">
@@ -84,4 +84,5 @@
     <string name="ok">Ina</string>
     <string name="out_of_date_description">Du, ꝡä duı geo ní rom lê boq, ꝡä shue doe hóq ꝡo. Mıeq súq, mä bo rómrıaq suqbo sa heno nıq ba.</string>
     <string name="out_of_date">Duı geo</string>
+    <string name="my_words">Báq toa jıbo</string>
 </resources>

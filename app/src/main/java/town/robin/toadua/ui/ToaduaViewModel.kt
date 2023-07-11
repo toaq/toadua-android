@@ -394,29 +394,38 @@ class ToaduaViewModel(context: Context) : ViewModel() {
 
     private val requestQuery = Channel<QueryParams>(Channel.RENDEZVOUS)
 
-    fun setQuery(value: String) {
-        _query.value = _query.value.copy(query = value)
+    private fun updateQuery(transform: (QueryParams) -> QueryParams) {
+        _query.value = transform(_query.value)
         viewModelScope.launch { requestQuery.send(_query.value) }
+    }
+
+    fun setQuery(value: String) {
+        updateQuery { it.copy(query = value) }
     }
 
     fun setUserFilter(value: String?) {
-        _query.value = _query.value.copy(userFilter = value)
-        viewModelScope.launch { requestQuery.send(_query.value) }
+        updateQuery { it.copy(userFilter = value) }
     }
 
     fun setIdFilter(value: String?) {
-        _query.value = _query.value.copy(idFilter = value)
-        viewModelScope.launch { requestQuery.send(_query.value) }
+        updateQuery { it.copy(idFilter = value) }
     }
 
     fun setArityFilter(value: Arity?) {
-        _query.value = _query.value.copy(arityFilter = value)
-        viewModelScope.launch { requestQuery.send(_query.value) }
+        updateQuery { it.copy(arityFilter = value) }
     }
 
     fun setSortOrder(value: SortOrder?) {
-        _query.value = _query.value.copy(sortOrder = value)
-        viewModelScope.launch { requestQuery.send(_query.value) }
+        updateQuery { it.copy(sortOrder = value) }
+    }
+
+    fun showMyWords() {
+        updateQuery {
+            emptyQuery.copy(
+                userFilter = prefs.username.value,
+                sortOrder = SortOrder.NEWEST
+            )
+        }
     }
 
     private val _searching = MutableStateFlow(false)

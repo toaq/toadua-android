@@ -1,6 +1,7 @@
 package town.robin.toadua.ui
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CollectionsBookmark
 import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Login
@@ -22,6 +23,7 @@ fun UserMenu(
     username: String?,
     onShowCreateAccount: () -> Unit,
     onShowSignIn: () -> Unit,
+    onShowMyWords: () -> Unit,
     onSignOut: () -> Unit,
 ) {
     val loggedIn = username != null
@@ -39,6 +41,11 @@ fun UserMenu(
         onDismissRequest = { expanded = false },
     ) {
         if (loggedIn) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.my_words)) },
+                onClick = { onShowMyWords(); expanded = false },
+                leadingIcon = { Icon(Icons.Outlined.CollectionsBookmark, null) },
+            )
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.sign_out)) },
                 onClick = { onSignOut(); expanded = false },

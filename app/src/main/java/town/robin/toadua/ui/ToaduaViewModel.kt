@@ -36,7 +36,7 @@ private val defaultLanguages = mapOf(
     "jbo" to Language("jbo", "jbo", "la .lojban."),
     "tok" to Language("tok", "tok", "toki pona"),
     "ja" to Language("ja", "ja", "日本語"),
-    "zh" to Language("zh-Hans", "zh", "官话"),
+    "zh" to Language("zh-Hans", "zh", "中文"),
     "es" to Language("es", "es", "Español"),
     "fr" to Language("fr", "fr", "Français"),
     "de" to Language("de", "de", "Deutsch"),

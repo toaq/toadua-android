@@ -75,6 +75,7 @@
     <string name="word_of_the_day">Tóa po cháq</string>
     <string name="hide">Shıao</string>
     <plurals name="some_results">
+        <item quantity="one">Se nhọ́%d</item>
         <item quantity="other">Se nhọ́%d</item>
     </plurals>
     <string name="recover_entry_error">Buaq jí, lä mụjıqnua já ní juoıse ꝡo</string>

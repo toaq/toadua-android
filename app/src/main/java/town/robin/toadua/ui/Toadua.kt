@@ -46,6 +46,7 @@ fun Toadua(viewModel: ToaduaViewModel) {
     val showWordOfTheDay by viewModel.showWordOfTheDay.collectAsStateWithLifecycle()
     val recentlyAdded by viewModel.recentlyAdded.collectAsStateWithLifecycle()
     val newEntry by viewModel.newEntry.collectAsStateWithLifecycle()
+    val showIncompatibleVersionsWarning by viewModel.showIncompatibleVersionsWarning.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -106,6 +107,10 @@ fun Toadua(viewModel: ToaduaViewModel) {
                 password = pendingPassword,
                 onPasswordChange = viewModel::setPendingPassword,
                 state = signInState!!,
+            )
+
+            if (showIncompatibleVersionsWarning) IncompatibleVersionsDialog(
+                onDismiss = viewModel::hideIncompatibleVersionsWarning,
             )
 
             Surface(

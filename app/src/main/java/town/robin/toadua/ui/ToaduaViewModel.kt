@@ -7,6 +7,9 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import io.github.z4kn4fein.semver.constraints.toConstraint
+import io.github.z4kn4fein.semver.satisfies
+import io.github.z4kn4fein.semver.toVersionOrNull
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -25,6 +28,7 @@ private val illegalUsernameCharacters = Regex("[^a-zA-Z]")
 private const val MAX_USERNAME_LENGTH = 64
 private val correctAntiSpamAnswers =
     setOf("hoemai", "hoemaı", "jaffra", "solpa'i", "solpahi", "selpa'i", "selpahi")
+private val supportedApiVersion = "^1.0.0".toConstraint()
 
 private val defaultLanguages = mapOf(
     "en" to Language("en", "en", "English"),
@@ -77,6 +81,35 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     val username: StateFlow<String?> = prefs.username
 
     private val api = ToaduaService.create(SERVER)
+
+    private val _showIncompatibleVersionsWarning = MutableStateFlow(false)
+    val showIncompatibleVersionsWarning: StateFlow<Boolean> = _showIncompatibleVersionsWarning
+
+    fun hideIncompatibleVersionsWarning() {
+        _showIncompatibleVersionsWarning.value = false
+    }
+
+    private fun checkApiAccess() {
+        viewModelScope.launch {
+            try {
+                val welcome = api.welcome(WelcomeRequest(prefs.authToken.value))
+                val version = welcome.version.toVersionOrNull()
+                if (version != null && version satisfies supportedApiVersion) {
+                    // Our username may have changed
+                    prefs.username.value = welcome.name
+                    // Also, the token could have expired
+                    if (welcome.name == null) invalidateSession()
+                } else {
+                    Log.e("checkApiAccess", "Incompatible API version $version")
+                    _showIncompatibleVersionsWarning.value = true
+                }
+            } catch (t: CancellationException) {
+                throw t
+            } catch (t: Throwable) {
+                Log.e("checkApiAccess", "API not reachable", t)
+            }
+        }
+    }
 
     private val _wordOfTheDay = MutableStateFlow<Entry?>(null)
     val wordOfTheDay: StateFlow<Entry?> = _wordOfTheDay
@@ -710,6 +743,7 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     }
 
     fun onActivityResume() {
+        checkApiAccess()
         refreshWordOfTheDay()
         refreshRecentlyAdded()
     }

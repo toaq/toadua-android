@@ -81,4 +81,7 @@
     <string name="deleted_entry">Lụıjıqnua súq mímo «%s» teo</string>
     <string name="undo">Rıutua</string>
     <string name="recently_added">Báq fıeqse nıq</string>
+    <string name="ok">Ina</string>
+    <string name="out_of_date_description">Du, ꝡä duı geo ní rom lê boq, ꝡä shue doe hóq ꝡo. Mıeq súq, mä bo rómrıaq suqbo sa heno nıq ba.</string>
+    <string name="out_of_date">Duı geo</string>
 </resources>

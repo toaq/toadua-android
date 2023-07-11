@@ -82,4 +82,7 @@
     <string name="deleted_entry">„%s“ gelöscht</string>
     <string name="undo">Rückgängig</string>
     <string name="recently_added">Kürzlich erstellt</string>
+    <string name="ok">OK</string>
+    <string name="out_of_date_description">Diese App scheint veraltet zu sein, und funktioniert möglicherweise nicht mehr. Überprüfe deinen App-Store auf Updates.</string>
+    <string name="out_of_date">Veraltet</string>
 </resources>

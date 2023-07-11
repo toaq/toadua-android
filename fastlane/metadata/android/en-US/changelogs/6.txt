@@ -1,0 +1,1 @@
+This version features a redesigned interface with a new home screen that helps you discover more words. Other notable features include a shortcut for editing your own entries, and the ability to open Toadua links directly in the app.

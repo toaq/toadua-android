@@ -15,8 +15,8 @@ android {
         applicationId = "town.robin.toadua"
         minSdk = 23
         targetSdk = 33
-        versionCode = 5
-        versionName = "1.1.0"
+        versionCode = 6
+        versionName = "2.0.0"
         resourceConfigurations.addAll(
             listOf(
                 "en", "b+qtq+Latn", "b+jbo", "b+tok", "ja", "b+zh+Hans", "es", "fr", "de", "pl",

@@ -569,8 +569,10 @@ class ToaduaViewModel(context: Context) : ViewModel() {
                     updateEntry(busyEntry, editedEntry)
 
                     // Now delete the entry this was replacing
-                    stageDeletion(e.id)
-                    commitDeletionInternal()
+                    if (e.user == prefs.username.value) {
+                        stageDeletion(e.id)
+                        commitDeletionInternal()
+                    }
                 } else {
                     Log.e("submitEdit", "Error creating entry: ${create.error}")
                     _errors.send(ErrorType.CREATE)

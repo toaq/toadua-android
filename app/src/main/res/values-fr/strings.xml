@@ -1,2 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources />
+<resources>
+    <string name="close">Fermer</string>
+    <string name="search">Rechercher</string>
+    <string name="about_toadua">À propos de Toadua</string>
+    <string name="about_toadua_description">Version %s de Toadua sur Android, par Robin (Loekıa) et Dana Altarace, service dorsal et hébergement par uakci</string>
+    <string name="sign_up">S\'inscrire</string>
+    <string name="cancel">Annuler</string>
+    <string name="create_account">Créer un compte</string>
+    <string name="join_to_collaborate">Rejoigner pour collaborer aux mots</string>
+    <string name="username">Nom d\'utilisateur·rice</string>
+    <string name="username_taken">Désolé, ce nom d\'utilisateur·rice est déjà pris</string>
+    <string name="password">Mot de passe</string>
+    <string name="like">Liker</string>
+    <string name="more">En savoir plus</string>
+    <string name="link_copied">Le lien est copié</string>
+    <string name="edit">Éditer</string>
+    <string name="delete">Supprimer</string>
+    <string name="new_comment">Faire un nouveau commentaire</string>
+    <string name="comment">Faire un commentaire</string>
+    <string name="submit">Soumettre</string>
+    <string name="selected">Sélectionné</string>
+    <string name="new_language">Nouvelle langue</string>
+    <string name="term">Mot</string>
+    <string name="new_entry">Nouveau élément</string>
+    <string name="definition">Définition</string>
+    <string name="insert_blank">Inserter un blanc</string>
+    <string name="add">Ajouter</string>
+    <string name="language_code">Code de langue</string>
+    <string name="clear_filter">Éliminer le filtre</string>
+    <string name="highest_score">Plus grand score</string>
+    <string name="lowest_score">Plus bas score</string>
+    <string name="newest">Plus nouvelle</string>
+    <string name="random">Au hasard</string>
+    <string name="positive_score">+%d</string>
+    <string name="unknown_error">Quelque chose s\'est mal tourné. Essayer plus tard\?</string>
+    <string name="negative_score">-%d</string>
+    <string name="copy_link">Copier le lien</string>
+    <string name="dislike">Déliker</string>
+    <string name="language_code_example">par ex. fr</string>
+    <string name="oldest">Plus ancienne</string>
+</resources>

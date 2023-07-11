@@ -136,8 +136,13 @@ class ToaduaViewModel(context: Context) : ViewModel() {
                                 idFilter = entryId,
                             )
                         )
-                        if (search.success && search.results?.size == 1) {
-                            _wordOfTheDay.value = Entry(search.results.first())
+                        if (search.success) {
+                            if (search.results?.size == 1) {
+                                _wordOfTheDay.value = Entry(search.results.first())
+                            } else {
+                                // It's likely that the word was deleted
+                                prefs.showWordOfTheDay.value = false
+                            }
                         } else {
                             Log.e(
                                 "refreshWordOfTheDay",

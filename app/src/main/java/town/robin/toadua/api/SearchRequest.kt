@@ -2,6 +2,11 @@
 
 package town.robin.toadua.api
 
+// Usernames of users we want to exclude when picking a random word
+private val randomWordExcludedUsers = setOf(
+    "examples", "oldexamples", "oldofficial", "oldcountries", "spreadsheet",
+)
+
 class SearchRequest(
     val token: String?,
     val query: List<Any>,
@@ -38,6 +43,19 @@ class SearchRequest(
 
             val query = listOf("and", *conjuncts.toTypedArray())
             return SearchRequest(token, query, sortOrder, limit)
+        }
+
+        fun randomWord(
+            token: String?,
+            language: String,
+        ): SearchRequest {
+            val excludedUserFilters = randomWordExcludedUsers.map { listOf("user", it) }
+            val query = listOf(
+                "and",
+                listOf("scope", language),
+                listOf("not", listOf("or", *excludedUserFilters.toTypedArray()))
+            )
+            return SearchRequest(token, query, SortOrder.RANDOM, 1)
         }
     }
 }

@@ -163,11 +163,9 @@ class ToaduaViewModel(context: Context) : ViewModel() {
             viewModelScope.launch {
                 try {
                     val search = api.search(
-                        SearchRequest.search(
+                        SearchRequest.randomWord(
                             prefs.authToken.value,
-                            ToaduaPrefs.defaultLanguage,
-                            sortOrder = SortOrder.RANDOM,
-                            limit = 1,
+                            ToaduaPrefs.defaultLanguage
                         )
                     )
                     if (search.success && search.results?.size == 1) {

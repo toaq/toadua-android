@@ -1,2 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources />
+<resources>
+    <string name="search">alasa</string>
+    <string name="close">weka</string>
+    <string name="about_toadua">ijo pi ilo Towatuwa</string>
+    <string name="sign_up">kama lon</string>
+    <string name="cancel">ala</string>
+    <string name="join_to_collaborate">o kama pona e nimi lon ni</string>
+    <string name="username">nimi</string>
+    <string name="username_taken">ike, jan li kama jo e nimi ni</string>
+    <string name="password">nimi len</string>
+    <string name="positive_score">+%d</string>
+    <string name="more">ante</string>
+    <string name="comment">toki</string>
+    <string name="link_copied">sitelen li lon ilo sina</string>
+    <string name="copy_link">o tawa e sitelen tawa ilo sina</string>
+    <string name="edit">ante</string>
+    <string name="delete">weka</string>
+    <string name="new_comment">toki sin</string>
+    <string name="submit">kama len ala</string>
+    <string name="selected">suli tawa sina</string>
+    <string name="new_language">nasin toki sin</string>
+    <string name="term">nimi</string>
+    <string name="new_entry">kon nimi sin</string>
+    <string name="definition">kon nimi</string>
+    <string name="insert_blank">lon e ala</string>
+    <string name="add">kama lon</string>
+    <string name="language_code">nanpa pi nasin toki</string>
+    <string name="language_code_example">fr en ante li ken</string>
+    <string name="clear_filter">weka e len tan nimi</string>
+    <string name="highest_score">nanpa pi suli mute</string>
+    <string name="lowest_score">nanpa pi lili mute</string>
+    <string name="newest">sin</string>
+    <string name="random">ijo pi nasin ala</string>
+    <string name="relevance">suli</string>
+    <string name="author">jan pi kama ona</string>
+    <string name="id">nanpa nimi</string>
+    <string name="arity">nanpa ijo</string>
+    <string name="nullary">ijo ala</string>
+    <string name="unary">ijo wan</string>
+    <string name="binary">ijo tu</string>
+    <string name="ternary">ijo mute</string>
+    <string name="filter_by_author">len e nimi tan jan pi kama ona</string>
+    <string name="filter_by_id">len e nimi tan nanpa nimi</string>
+    <string name="entry_id">nanpa nimi pi kon nimi</string>
+    <string name="filter_by_arity">len e nimi tan nanpa ijo</string>
+    <string name="name_of_creator">nimi pi mama pi toki Towan li seme\?</string>
+    <string name="like">pona</string>
+    <string name="create_account">lon e sinpin jan</string>
+    <string name="unknown_error">ilo li ike. tenpo kama la o ijo sin\?</string>
+    <string name="about_toadua_description">ilo Towatuwa Ansowi nanpa %s, tan jan Wapin (Loekıa) tan jan Tana Ataresi. ijo len en ken lukin li tan soweli Jasi</string>
+    <string name="dislike">ike</string>
+    <string name="negative_score">-%d</string>
+    <string name="oldest">sin ala</string>
+    <string name="set_filter">lon e len nimi</string>
+</resources>

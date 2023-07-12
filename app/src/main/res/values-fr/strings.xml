@@ -33,7 +33,7 @@
     <string name="newest">Plus nouvelle</string>
     <string name="random">Au hasard</string>
     <string name="positive_score">+%d</string>
-    <string name="unknown_error">Quelque chose s\'est mal tourné. Essayer plus tard\?</string>
+    <string name="unknown_error">Quelque chose s\'est mal tourné. Essayer plus tard \?</string>
     <string name="negative_score">-%d</string>
     <string name="copy_link">Copier le lien</string>
     <string name="dislike">Déliker</string>

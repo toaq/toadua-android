@@ -1,2 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources />
+<resources>
+    <string name="about_toadua">关于 Toadua</string>
+    <string name="search">搜索</string>
+    <string name="close">关闭</string>
+    <string name="sign_up">注册</string>
+    <string name="cancel">取消</string>
+    <string name="create_account">新账户</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="positive_score">+%d</string>
+    <string name="negative_score">-%d</string>
+    <string name="more">更多</string>
+    <string name="comment">评论</string>
+    <string name="link_copied">已复制链接</string>
+    <string name="copy_link">复制链接</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="new_comment">新评论</string>
+    <string name="submit">提交</string>
+    <string name="new_language">新增语言</string>
+    <string name="term">词汇</string>
+    <string name="definition">意思</string>
+    <string name="author">作者</string>
+    <string name="id">ID</string>
+    <string name="no_results">没有结果。要新增词条吗？</string>
+    <string name="sign_in">登录</string>
+    <string name="create_entry_error">创造词条时出问题</string>
+    <string name="delete_entry_error">删除词条时出问题</string>
+    <string name="recover_entry_error">无法恢复该词条了</string>
+    <string name="vote_error">提交您的投票时出问题</string>
+    <string name="comment_error">提交您的评论时出问题</string>
+    <string name="sign_out">登出</string>
+    <string name="about">关于</string>
+    <string name="hide">隐藏</string>
+    <string name="deleted_entry">已删除 “%s”</string>
+    <string name="undo">撤销</string>
+    <string name="recently_added">最近新增的</string>
+    <plurals name="some_results">
+        <item quantity="other">%d 个结果</item>
+    </plurals>
+    <string name="ok">OK</string>
+    <string name="my_words">我的词汇</string>
+    <string name="add">新增</string>
+    <string name="language_code">语言代码</string>
+    <string name="newest">最新</string>
+    <string name="language_code_example">例如：zh</string>
+    <string name="random">随机</string>
+    <string name="oldest">最旧</string>
+    <string name="incorrect_password">密码错误</string>
+    <string name="cant_find_question">找不到您要找的吗？</string>
+    <string name="cant_find_account">找不到那个账户</string>
+    <string name="search_error">搜索时出问题</string>
+</resources>

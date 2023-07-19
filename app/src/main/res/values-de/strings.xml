@@ -4,7 +4,7 @@
     <string name="close">Schließen</string>
     <string name="about_toadua">Über Toadua</string>
     <string name="about_toadua_description">Toadua-Android Version %s, von Robin (Loekıa) und Dana Altarace, mit Backend-Service und Hosting von uakci</string>
-    <string name="sign_up">Anmelden</string>
+    <string name="sign_up">Registrieren</string>
     <string name="cancel">Abbrechen</string>
     <string name="create_account">Konto erstellen</string>
     <string name="join_to_collaborate">Beitreten, um gemeinsam an Wörter zu arbeiten</string>

@@ -37,10 +37,13 @@ private val defaultLanguages = mapOf(
     "tok" to Language("tok", "tok", "toki pona"),
     "ja" to Language("ja", "ja", "日本語"),
     "zh" to Language("zh-Hans", "zh", "中文"),
+    "pl" to Language("pl", "pl", "Polski"),
     "es" to Language("es", "es", "Español"),
+    "tl" to Language("tl", "tl", "Tagalog"),
     "fr" to Language("fr", "fr", "Français"),
     "de" to Language("de", "de", "Deutsch"),
-    "pl" to Language("pl", "pl", "Polski"),
+    "ru" to Language("ru", "ru", "Русский"),
+    "cs" to Language("cs", "cs", "Čeština"),
 )
 
 data class QueryParams(

@@ -6,8 +6,11 @@
     <locale android:name="b+tok" />
     <locale android:name="ja" />
     <locale android:name="b+zh+Hans" />
+    <locale android:name="pl" />
     <locale android:name="es" />
+    <locale android:name="tl" />
     <locale android:name="fr" />
     <locale android:name="de" />
-    <locale android:name="pl" />
+    <locale android:name="ru" />
+    <locale android:name="cs" />
 </locale-config>

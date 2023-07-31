@@ -19,7 +19,19 @@ android {
         versionName = "2.0.0"
         resourceConfigurations.addAll(
             listOf(
-                "en", "b+qtq+Latn", "b+jbo", "b+tok", "ja", "b+zh+Hans", "es", "fr", "de", "pl",
+                "en",
+                "b+qtq+Latn",
+                "b+jbo",
+                "b+tok",
+                "ja",
+                "b+zh+Hans",
+                "pl",
+                "es",
+                "tl",
+                "fr",
+                "de",
+                "ru",
+                "cs"
             )
         )
         manifestPlaceholders += mapOf(

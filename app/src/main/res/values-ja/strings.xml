@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources />
+<resources>
+    <string name="search">検索</string>
+    <string name="close">閉じる</string>
+    <string name="about_toadua">Toaduaについて</string>
+    <string name="about_toadua_description">Toadua Android バージョン %s は、Robin (Loekıa) と Dana Altarace によって、バックエンドのサービスとホスティングはuakciによって提供されています</string>
+    <string name="sign_up">登録</string>
+    <string name="cancel">キャンセル</string>
+    <string name="create_account">アカウントを作成する</string>
+    <string name="join_to_collaborate">言葉の共同編集に参加する</string>
+    <string name="username">ユーザーネーム</string>
+</resources>

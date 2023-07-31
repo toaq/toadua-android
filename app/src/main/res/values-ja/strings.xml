@@ -31,4 +31,10 @@
     <string name="link_copied">リンクをコピーしました</string>
     <string name="new_comment">新しいコメント</string>
     <string name="submit">投稿</string>
+    <string name="term">言葉</string>
+    <string name="add">追加</string>
+    <string name="language_code">言語コード</string>
+    <string name="language_code_example">例：fr</string>
+    <string name="highest_score">評価が高い順</string>
+    <string name="lowest_score">評価が低い順</string>
 </resources>

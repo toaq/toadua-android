@@ -15,4 +15,20 @@
     <string name="negative_score">−%d</string>
     <string name="more">さらに表示</string>
     <string name="name_of_creator">Toaqの作者の名前は？</string>
+    <string name="dislike">低評価</string>
+    <string name="like">高評価</string>
+    <string name="edit">編集</string>
+    <string name="selected">選択済み</string>
+    <string name="new_language">新しい言語</string>
+    <string name="definition">意味</string>
+    <string name="random">ランダム</string>
+    <string name="undo">元に戻す</string>
+    <string name="sign_in">サインイン</string>
+    <string name="delete">削除</string>
+    <string name="password">パスワード</string>
+    <string name="comment">コメント</string>
+    <string name="copy_link">リンクをコピーする</string>
+    <string name="link_copied">リンクをコピーしました</string>
+    <string name="new_comment">新しいコメント</string>
+    <string name="submit">投稿</string>
 </resources>

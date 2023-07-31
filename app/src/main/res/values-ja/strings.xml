@@ -37,4 +37,12 @@
     <string name="language_code_example">例：fr</string>
     <string name="highest_score">評価が高い順</string>
     <string name="lowest_score">評価が低い順</string>
+    <string name="newest">新しい順</string>
+    <string name="oldest">古い順</string>
+    <string name="hide">非表示</string>
+    <string name="guest">ゲスト</string>
+    <string name="word_of_the_day">今日の単語</string>
+    <string name="sign_out">サインアウト</string>
+    <string name="clear">クリア</string>
+    <string name="ok">OK</string>
 </resources>

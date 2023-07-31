@@ -49,4 +49,20 @@
     <string name="author">編集者</string>
     <string name="new_entry">新しい見出し</string>
     <string name="id">ID</string>
+    <string name="arity">項数</string>
+    <string name="nullary">0項</string>
+    <string name="unary">1項</string>
+    <string name="binary">2項</string>
+    <string name="ternary">3項</string>
+    <string name="filter_by_author">編集者でフィルタ</string>
+    <string name="filter_by_id">IDでフィルタ</string>
+    <string name="clear_filter">フィルタ解除</string>
+    <string name="set_filter">フィルタ</string>
+    <string name="collapse">折りたたむ</string>
+    <string name="expand">展開</string>
+    <string name="filter_by">フィルタの種類</string>
+    <string name="sort_by">並べ替えの種類</string>
+    <string name="insert_blank">項を挿入</string>
+    <string name="no_results">見出しが見つかりませんでした。代わりに作成しますか？</string>
+    <string name="cant_find_question">お探しの見出しが見つかりませんか？</string>
 </resources>

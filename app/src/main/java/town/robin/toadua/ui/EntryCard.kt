@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.filled.ThumbUp
@@ -81,12 +82,14 @@ fun EntryCard(
                         ),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        Column(
-                            Modifier.padding(horizontal = recessOutset),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            Text(e.term, style = MaterialTheme.typography.titleLarge)
-                            Text(e.definition, style = MaterialTheme.typography.bodyMedium)
+                        SelectionContainer {
+                            Column(
+                                Modifier.padding(horizontal = recessOutset),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Text(e.term, style = MaterialTheme.typography.titleLarge)
+                                Text(e.definition, style = MaterialTheme.typography.bodyMedium)
+                            }
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -258,9 +261,11 @@ fun EntryCard(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             Text(comments.user, style = MaterialTheme.typography.titleSmall)
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                for (content in comments.contents) {
-                                    Text(content, style = MaterialTheme.typography.bodyMedium)
+                            SelectionContainer {
+                                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    for (content in comments.contents) {
+                                        Text(content, style = MaterialTheme.typography.bodyMedium)
+                                    }
                                 }
                             }
                         }

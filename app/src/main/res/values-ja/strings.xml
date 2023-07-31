@@ -9,4 +9,5 @@
     <string name="create_account">アカウントを作成する</string>
     <string name="join_to_collaborate">言葉の共同編集に参加する</string>
     <string name="username">ユーザーネーム</string>
+    <string name="username_taken">申し訳ございませんが、このユーザー名はすでに使われています。</string>
 </resources>

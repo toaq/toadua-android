@@ -45,4 +45,6 @@
     <string name="sign_out">サインアウト</string>
     <string name="clear">クリア</string>
     <string name="ok">OK</string>
+    <string name="relevance">関連度順</string>
+    <string name="author">編集者</string>
 </resources>

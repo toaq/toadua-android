@@ -9,5 +9,10 @@
     <string name="create_account">アカウントを作成する</string>
     <string name="join_to_collaborate">言葉の共同編集に参加する</string>
     <string name="username">ユーザーネーム</string>
-    <string name="username_taken">申し訳ございませんが、このユーザー名はすでに使われています。</string>
+    <string name="username_taken">申し訳ございませんが、このユーザー名はすでに使われています</string>
+    <string name="unknown_error">問題が発生しました。しばらく待ってからもう一度お試しください。</string>
+    <string name="positive_score">+%d</string>
+    <string name="negative_score">−%d</string>
+    <string name="more">さらに表示</string>
+    <string name="name_of_creator">Toaqの作者の名前は？</string>
 </resources>

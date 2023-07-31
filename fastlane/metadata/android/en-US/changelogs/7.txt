@@ -1,0 +1,1 @@
+This version features greater translation coverage, the ability to copy text from entries, and 3 new languages: Tagalog, Russian, and Czech.

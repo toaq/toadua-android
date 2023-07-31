@@ -20,8 +20,8 @@ android {
         applicationId = "town.robin.toadua"
         minSdk = 23
         targetSdk = 34
-        versionCode = 6
-        versionName = "2.0.0"
+        versionCode = 7
+        versionName = "2.1.0"
     }
 
     buildFeatures {

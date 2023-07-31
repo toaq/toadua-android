@@ -65,4 +65,23 @@
     <string name="insert_blank">項を挿入</string>
     <string name="no_results">見出しが見つかりませんでした。代わりに作成しますか？</string>
     <string name="cant_find_question">お探しの見出しが見つかりませんか？</string>
+    <string name="entry_id">見出しID</string>
+    <string name="filter_by_arity">項数でフィルタ</string>
+    <string name="reset_sort_order">並べ替えを解除</string>
+    <string name="incorrect_password">パスワードが間違っています</string>
+    <string name="cant_find_account">アカウントが見つかりません</string>
+    <string name="search_error">検索クエリで問題が発生しました</string>
+    <string name="create_entry_error">見出しの作成中に問題が発生しました</string>
+    <string name="delete_entry_error">見出しの削除中に問題が発生しました</string>
+    <string name="comment_error">コメントの投稿で問題が発生しました</string>
+    <string name="vote_error">評価の送信中に問題が発生しました</string>
+    <string name="about">このアプリについて</string>
+    <string name="deleted_entry">%s を削除しました</string>
+    <string name="recently_added">最近追加された見出し</string>
+    <plurals name="some_results">
+        <item quantity="other">%d 件</item>
+    </plurals>
+    <string name="out_of_date">廃止</string>
+    <string name="out_of_date_description">このアプリのバージョンは古いため、正常に動作しない可能性があります。アップデートについてはアプリストアをご確認ください。</string>
+    <string name="my_words">投稿済みの単語</string>
 </resources>

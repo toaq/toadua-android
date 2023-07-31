@@ -9,7 +9,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Toadua"
         android:supportsRtl="true"
-        android:localeConfig="@xml/locales_config"
         android:windowSoftInputMode="adjustResize"
         android:theme="@style/Theme.Toadua"
         android:networkSecurityConfig="${networkSecurityConfig}"

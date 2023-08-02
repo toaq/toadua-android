@@ -15,6 +15,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import town.robin.toadua.api.*
 import java.net.URI
+import java.text.Normalizer
 import java.util.Date
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
@@ -27,7 +28,7 @@ private val searchRateLimit = 250.toDuration(DurationUnit.MILLISECONDS)
 private val illegalUsernameCharacters = Regex("[^a-zA-Z]")
 private const val MAX_USERNAME_LENGTH = 64
 private val correctAntiSpamAnswers =
-    setOf("hoemai", "hoemaı", "jaffra", "solpa'i", "solpahi", "selpa'i", "selpahi")
+    setOf("toaq", "toaqzu", "tóaqzu", "mi toaq", "mı toaq", "mí toaq")
 private val supportedApiVersion = "^1.0.0".toConstraint()
 
 private val defaultLanguages = mapOf(
@@ -261,7 +262,10 @@ class ToaduaViewModel(context: Context) : ViewModel() {
     }
 
     fun createAccount() {
-        if (correctAntiSpamAnswers.contains(_pendingAntiSpamAnswer.value)) {
+        val antiSpamAnswer =
+            Normalizer.normalize(_pendingAntiSpamAnswer.value, Normalizer.Form.NFC).lowercase()
+
+        if (correctAntiSpamAnswers.contains(antiSpamAnswer)) {
             _createAccountState.value = CreateAccountState.BUSY
             viewModelScope.launch {
                 try {

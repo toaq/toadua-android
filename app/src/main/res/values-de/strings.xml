@@ -11,7 +11,6 @@
     <string name="username">Benutzername</string>
     <string name="username_taken">Der Benutzername ist bereits vergeben</string>
     <string name="password">Passwort</string>
-    <string name="name_of_creator">Wie heißt der Schöpfer von Toaq?</string>
     <string name="unknown_error">Etwas ist schief gelaufen. Probiere das vielleicht später?</string>
     <string name="positive_score">+%d</string>
     <string name="negative_score">−%d</string>

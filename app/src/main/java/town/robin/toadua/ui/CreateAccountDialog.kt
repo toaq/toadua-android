@@ -107,7 +107,7 @@ fun CreateAccountDialog(
                 OutlinedTextField(
                     value = antiSpamAnswer,
                     onValueChange = onAntiSpamAnswerChange,
-                    label = { Text(stringResource(R.string.name_of_creator)) },
+                    label = { Text("Raq ní toakue hí zu?") },
                     singleLine = true,
                     enabled = !busy,
                     isError = state == CreateAccountState.BAD_ANTI_SPAM_ANSWER,

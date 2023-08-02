@@ -6,7 +6,6 @@
     <string name="sign_up">Zarejestruj się</string>
     <string name="username_taken">Przykro nam, ta nazwa użytkownika jest zajęta</string>
     <string name="password">Hasło</string>
-    <string name="name_of_creator">Jak ma na imię twórca Toaq\?</string>
     <string name="unknown_error">Coś się stało. Może spróbuj ponownie później\?</string>
     <string name="positive_score">+%d</string>
     <string name="like">Polub</string>

@@ -11,7 +11,6 @@
     <string name="username">Username</string>
     <string name="username_taken">Sorry, that username is taken</string>
     <string name="password">Password</string>
-    <string name="name_of_creator">What is the name of Toaq\'s creator?</string>
     <string name="unknown_error">Something went wrong. Maybe try again later?</string>
     <string name="positive_score">+%d</string>
     <string name="negative_score">−%d</string>

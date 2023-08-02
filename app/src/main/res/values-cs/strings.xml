@@ -8,7 +8,6 @@
     <string name="username">Uživatelské jméno</string>
     <string name="username_taken">Toto uživatelské jméno už někdo bohužel používá</string>
     <string name="password">Heslo</string>
-    <string name="name_of_creator">Jak se jmenuje tvůrce jazyka Toaq\?</string>
     <string name="unknown_error">Něco se pokazilo. Zkuste znovu za chvíli\?</string>
     <string name="positive_score">+%d</string>
     <string name="negative_score">–%d</string>

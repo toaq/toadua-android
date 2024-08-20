@@ -1,0 +1,1 @@
+This version updates the app to point to the new server location on uakci.space and also adds support for the new way of editing entries.

@@ -563,6 +563,13 @@ class ToaduaViewModel(context: Context) : ViewModel() {
         updateEntry(e, e.copy(pendingEdit = null))
     }
 
+    suspend fun showSuccessfulEdit(old: Entry, new: Entry) {
+        // Populate the view with the new entry
+        _query.value = emptyQuery.copy(idFilter = new.id)
+        syntheticResults.send(listOf(new))
+        updateEntry(old, new)
+    }
+
     fun submitEdit(e: Entry) = ensureSignedIn {
         val authToken = prefs.authToken.value!!
         val edit = e.pendingEdit!!
@@ -571,38 +578,57 @@ class ToaduaViewModel(context: Context) : ViewModel() {
             val busyEntry = e.copy(pendingEdit = edit.copy(busy = true))
             updateEntry(e, busyEntry)
 
-            try {
-                val create = api.create(
-                    CreateRequest(
-                        authToken,
-                        edit.term,
-                        edit.definition.replace(uiBlank, modelBlank),
-                        prefs.language.value,
+            if (e.user == prefs.username.value && edit.term == edit.initialTerm) {
+                try {
+                    // It's our own entry and the term hasn't changed, so we can use a
+                    // native edit request
+                    val editResponse = api.edit(
+                        EditRequest(
+                            authToken,
+                            e.id,
+                            edit.definition.replace(uiBlank, modelBlank),
+                            prefs.language.value,
+                        )
                     )
-                )
-                if (create.success && create.entry != null) {
-                    // Populate the view with the returned entry
-                    val editedEntry = Entry(create.entry)
-                    _query.value = emptyQuery.copy(idFilter = create.entry.id)
-                    syntheticResults.send(listOf(editedEntry))
-                    updateEntry(busyEntry, editedEntry)
-
-                    // Now delete the entry this was replacing
-                    if (e.user == prefs.username.value) {
-                        stageDeletion(e.id)
-                        commitDeletionInternal()
+                    if (editResponse.success && editResponse.entry != null) {
+                        showSuccessfulEdit(busyEntry, Entry(editResponse.entry))
                     }
-                } else {
-                    Log.e("submitEdit", "Error creating entry: ${create.error}")
+                } catch (t: CancellationException) {
+                    throw t
+                } catch (t: Throwable) {
+                    Log.e("submitEdit", "Error editing entry", t)
+                    _errors.send(ErrorType.EDIT)
+                    updateEntry(busyEntry, e)
+                }
+            } else {
+                try {
+                    val create = api.create(
+                        CreateRequest(
+                            authToken,
+                            edit.term,
+                            edit.definition.replace(uiBlank, modelBlank),
+                            prefs.language.value,
+                        )
+                    )
+                    if (create.success && create.entry != null) {
+                        showSuccessfulEdit(busyEntry, Entry(create.entry))
+                        // Now delete the entry this was replacing
+                        if (e.user == prefs.username.value) {
+                            stageDeletion(e.id)
+                            commitDeletionInternal()
+                        }
+                    } else {
+                        Log.e("submitEdit", "Error creating entry: ${create.error}")
+                        _errors.send(ErrorType.CREATE)
+                        updateEntry(busyEntry, e)
+                    }
+                } catch (t: CancellationException) {
+                    throw t
+                } catch (t: Throwable) {
+                    Log.e("submitEdit", "Error creating entry", t)
                     _errors.send(ErrorType.CREATE)
                     updateEntry(busyEntry, e)
                 }
-            } catch (t: CancellationException) {
-                throw t
-            } catch (t: Throwable) {
-                Log.e("submitEdit", "Error creating entry", t)
-                _errors.send(ErrorType.CREATE)
-                updateEntry(busyEntry, e)
             }
         }
     }

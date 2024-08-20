@@ -67,6 +67,7 @@
     <string name="create_entry_error">Something went wrong while creating that entry</string>
     <string name="delete_entry_error">Something went wrong while deleting that entry</string>
     <string name="recover_entry_error">We can\'t recover that entry anymore</string>
+    <string name="edit_entry_error">Something went wrong while editing that entry</string>
     <string name="vote_error">Something went wrong while submitting your vote</string>
     <string name="comment_error">Something went wrong while submitting your comment</string>
     <string name="guest">Guest</string>

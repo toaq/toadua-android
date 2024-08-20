@@ -30,6 +30,9 @@ interface ToaduaService {
     suspend fun remove(@Body body: RemoveRequest): RemoveResponse
 
     @POST(API_ENDPOINT)
+    suspend fun edit(@Body body: EditRequest): EditResponse
+
+    @POST(API_ENDPOINT)
     suspend fun vote(@Body body: VoteRequest): VoteResponse
 
     @POST(API_ENDPOINT)

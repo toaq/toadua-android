@@ -66,6 +66,7 @@
     <string name="search_error">Buaq sá raı, lä shoe joaı súq ní ꝡo</string>
     <string name="create_entry_error">Buaq sá raı, lä shoe fıeq súq júoıse ꝡo</string>
     <string name="delete_entry_error">Buaq sá raı, lä shoe jıqnua súq júoıse ꝡo</string>
+    <string name="edit_entry_error">Buaq sá raı, lä shoe beoja súq júoıse ꝡo</string>
     <string name="vote_error">Buaq sá raı, lä shoe kuaq súq, mä cho súq ní ꝡo</string>
     <string name="comment_error">Buaq sá raı, lä shoe dıeq súq ráqkuqse ꝡo</string>
     <string name="guest">Choaq</string>

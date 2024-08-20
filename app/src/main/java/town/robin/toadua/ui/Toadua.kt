@@ -76,6 +76,7 @@ fun Toadua(viewModel: ToaduaViewModel) {
                     ErrorType.CREATE -> resources.getString(R.string.create_entry_error)
                     ErrorType.DELETE -> resources.getString(R.string.delete_entry_error)
                     ErrorType.RESTORE -> resources.getString(R.string.recover_entry_error)
+                    ErrorType.EDIT -> resources.getString(R.string.edit_entry_error)
                     ErrorType.VOTE -> resources.getString(R.string.vote_error)
                     ErrorType.COMMENT -> resources.getString(R.string.comment_error)
                 }

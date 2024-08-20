@@ -66,6 +66,7 @@
     <string name="search_error">Bei deiner Suchabfrage ist etwas schief gelaufen</string>
     <string name="create_entry_error">Beim Erstellen des Eintrags ist etwas schief gelaufen</string>
     <string name="delete_entry_error">Beim Löschen des Eintrags ist etwas schief gelaufen</string>
+    <string name="edit_entry_error">Beim Bearbeiten des Eintrags ist etwas schief gelaufen</string>
     <string name="vote_error">Bei der Übermittlung deiner Abstimmung ist etwas schief gelaufen</string>
     <string name="comment_error">Bei der Übermittlung deines Kommentars ist etwas schief gelaufen</string>
     <string name="guest">Gast</string>

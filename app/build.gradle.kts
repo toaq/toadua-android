@@ -14,7 +14,7 @@ android {
     defaultConfig {
         manifestPlaceholders += mapOf(
             "apiScheme" to "https",
-            "apiHost" to "toadua.uakci.pl",
+            "apiHost" to "toadua.uakci.space",
             "apiPath" to "/"
         )
         applicationId = "town.robin.toadua"

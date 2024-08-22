@@ -86,4 +86,5 @@
     <string name="new_entry">Nueva entrada</string>
     <string name="copy_link">Copiar el enlace</string>
     <string name="sign_in">Iniciar sesión</string>
+    <string name="edit_entry_error">Algo salió mal al editar eta entrada</string>
 </resources>

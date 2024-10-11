@@ -86,4 +86,5 @@
     <string name="out_of_date_description">Cette application semble être obsolète et peut ne plus fonctionner. Veuillez consulter votre magasin d\'applications pour les mises à jour.</string>
     <string name="no_results">Aucun résultat. Créer une entrée à la place \?</string>
     <string name="sign_out">Se déconnecter</string>
+    <string name="edit_entry_error">Quelque chose s\'est mal passé durant l\'édition de cette entrée</string>
 </resources>

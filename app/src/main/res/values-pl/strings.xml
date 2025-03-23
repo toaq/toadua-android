@@ -87,4 +87,5 @@
     <string name="ternary">Trzyargumentowe</string>
     <string name="filter_by_id">Zawąź identifykator</string>
     <string name="sign_in">Zaloguj się</string>
+    <string name="edit_entry_error">Coś poszło nie tak podczas edytowania tego wpisu</string>
 </resources>
